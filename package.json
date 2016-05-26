@@ -1,0 +1,50 @@
+{
+  "name": "stack-exchange-markdown-retriever",
+  "version": "1.0.0",
+  "description": "Retrieves the markdown for a question or answer on a stack exchange site.",
+  "main": "index.js",
+  "scripts": {
+    "test": "snyk test && xo && nyc ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m4bwav/stack-exchange-markdown-retriever.git"
+  },
+  "keywords": [
+    "Stack Exchange",
+    "markdown",
+    "question",
+    "answer",
+    "stackexchange",
+    "stack overflow",
+    "stackoverflow"
+  ],
+  "author": "Mark Rogers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m4bwav/stack-exchange-markdown-retriever/issues"
+  },
+  "homepage": "https://github.com/m4bwav/stack-exchange-markdown-retriever#readme",
+  "devDependencies": {
+    "ava": "*",
+    "codecov.io": "^0.1.6",
+    "coveralls": "^2.11.9",
+    "execa": "^0.4.0",
+    "nyc": "^6.4.4",
+    "snyk": "^1.14.3",
+    "xo": "^0.15.1"
+  },
+  "xo": {
+    "rules": {
+      "xo/no-process-exit": "off",
+      "linebreak-style": "off",
+      "indent": [
+        "error",
+        2
+      ]
+    }
+  },
+  "dependencies": {
+    "stackexchange": "^0.3.0"
+  }
+}
