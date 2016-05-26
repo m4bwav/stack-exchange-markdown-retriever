@@ -45,6 +45,7 @@
     }
   },
   "dependencies": {
+    "commander": "^2.9.0",
     "stackexchange": "^0.3.0"
   }
 }
