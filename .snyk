@@ -1,0 +1,7 @@
+version: v1
+ignore:
+  'npm:hawk:20160119':
+    - stackexchange > request > hawk:
+        reason: None given
+        expires: '2016-06-26T02:05:41.614Z'
+patch: {}

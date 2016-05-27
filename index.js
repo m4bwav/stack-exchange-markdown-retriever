@@ -4,11 +4,9 @@ var Stackexchange = require('stackexchange');
 var exports = module.exports = {};
 
 function initializeStackExchangeContext(options) {
-  var site = options.site ? options.site.trim() : 'scifi.stackexchange.com/';
-
   var stackApiOptions = {
     version: 2.2,
-    site: site
+    site: options.site
   };
 
   return new Stackexchange(stackApiOptions);
@@ -18,13 +16,13 @@ function retrieveMarkdown(options, callback) {
   var stackContext = initializeStackExchangeContext(options);
 
   if (!options.entityId) {
-    throw new Error('Need an entity id to edit');
+    throw new Error('Need an entity id to read');
   }
 
   var filter = {
     // key: 'YOUR_API_KEY',
     order: 'asc',
-    filter: options.filter
+    filter: '!L_(I6pMIzdXP-hC1clc9EY'
   };
 
   if (options.apiKey) {
@@ -34,7 +32,6 @@ function retrieveMarkdown(options, callback) {
 	stackContext.answers.answers :
 	stackContext.questions.questions;
 
-	// Get all the questions (http://api.stackexchange.com/docs/questions)
   stackApiMethod(filter, function (err, results) {
     var markdown = results && results.items && results.items[0] ?
 		results.items[0].body_markdown :
