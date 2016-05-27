@@ -10,7 +10,6 @@
 
 Retrieves the markdown for a question or answer on a stack exchange site.
 
-
 ## Installation
 
 Installation is easiest through npm:
