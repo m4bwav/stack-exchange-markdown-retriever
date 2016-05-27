@@ -1,5 +1,7 @@
 # stack-exchange-markdown-retriever
 
+[![Join the chat at https://gitter.im/m4bwav/stack-exchange-markdown-retriever](https://badges.gitter.im/m4bwav/stack-exchange-markdown-retriever.svg)](https://gitter.im/m4bwav/stack-exchange-markdown-retriever?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![npm package](https://nodei.co/npm/stack-exchange-markdown-retriever.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/stack-exchange-markdown-retriever/)
 
 [![Build Status](https://img.shields.io/travis/m4bwav/stack-exchange-markdown-retriever/master.svg)](https://travis-ci.org/m4bwav/stack-exchange-markdown-retriever)
