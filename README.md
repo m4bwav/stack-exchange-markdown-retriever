@@ -5,6 +5,7 @@
 [![Build Status](https://img.shields.io/travis/m4bwav/stack-exchange-markdown-retriever/master.svg)](https://travis-ci.org/m4bwav/stack-exchange-markdown-retriever)
 [![Dependency Status](https://img.shields.io/david/m4bwav/stack-exchange-markdown-retriever.svg)](https://david-dm.org/m4bwav/stack-exchange-markdown-retriever)
 [![Coverage Status](https://img.shields.io/coveralls/m4bwav/stack-exchange-markdown-retriever/master.svg)](https://coveralls.io/github/m4bwav/stack-exchange-markdown-retriever?branch=master)
+[![Known Vulnerabilities](https://snyk.io/test/npm/stack-exchange-markdown-retriever/badge.svg?style=flat-square)](https://snyk.io/test/npm/stack-exchange-markdown-retriever)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![Gitter](https://badges.gitter.im/m4bwav/stack-exchange-markdown-retriever.svg)](https://gitter.im/m4bwav/stack-exchange-markdown-retriever?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 

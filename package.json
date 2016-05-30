@@ -4,7 +4,7 @@
   "description": "Retrieves the markdown for a question or answer on a stack exchange site.",
   "main": "index.js",
   "scripts": {
-    "test": "xo && nyc ava",
+    "test": "snyk test && xo && nyc ava",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "travis-after-success": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -48,6 +48,6 @@
   },
   "dependencies": {
     "commander": "^2.9.0",
-    "stackexchange": "^0.3.0"
+    "stackexchange": "^0.4.0"
   }
 }
