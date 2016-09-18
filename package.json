@@ -30,11 +30,11 @@
   "devDependencies": {
     "ava": "*",
     "codecov.io": "^0.1.6",
-    "coveralls": "^2.11.9",
+    "coveralls": "^2.x.x",
     "execa": "^0.4.0",
-    "nyc": "^6.4.4",
-    "snyk": "^1.14.3",
-    "xo": "^0.15.1"
+    "nyc": "^8.0.0",
+    "snyk": "^1.x.x",
+    "xo": "^0.x.x"
   },
   "xo": {
     "rules": {
@@ -47,7 +47,7 @@
     }
   },
   "dependencies": {
-    "commander": "^2.9.0",
-    "request": "2.74.x"
+    "commander": "^2.9.x",
+    "request": "^2.x.x"
   }
 }

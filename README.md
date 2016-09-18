@@ -53,3 +53,5 @@ $ stack-exchange-markdown-retriever --help
 ## License
 
 MIT © [Mark Rogers](http://www.markdavidrogers.com)
+  
+[![NPM](https://nodei.co/npm-dl/stack-exchange-markdown-retriever.png?months=3)](https://nodei.co/npm/stack-exchange-markdown-retriever/)
