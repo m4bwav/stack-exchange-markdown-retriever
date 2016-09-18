@@ -55,8 +55,8 @@ function performRetrieval(options, callback) {
           var bodyObj = JSON.parse(body.toString());
 
           prepareToCallback(error, bodyObj);
-        } catch (error) {
-          prepareToCallback(error);
+        } catch (err) {
+          prepareToCallback(err);
         }
       });
     }
