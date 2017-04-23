@@ -4,7 +4,7 @@
   "description": "Retrieves the markdown for a question or answer on a stack exchange site.",
   "main": "index.js",
   "scripts": {
-    "test": "snyk test && xo && nyc ava",
+    "test": "snyk auth d43c368a-d736-4cfd-a9f6-05783657d55d && snyk test && xo && nyc ava",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "travis-after-success": "nyc report --reporter=text-lcov | coveralls"
   },
