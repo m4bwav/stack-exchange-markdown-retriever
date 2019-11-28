@@ -1,6 +1,7 @@
 # stack-exchange-markdown-retriever
 
-[![npm package](https://nodei.co/npm/stack-exchange-markdown-retriever.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/stack-exchange-markdown-retriever/)
+[![npm package](https://nodei.co/npm/stack-exchange-markdown-retriever.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/stack-exchange-markdown-retriever/)  
+
 ![NPM Version](https://img.shields.io/npm/v/stack-exchange-markdown-retriever.svg?branch=master)
 ![downloads](https://img.shields.io/npm/dt/stack-exchange-markdown-retriever.svg)
 [![Build Status](https://img.shields.io/travis/m4bwav/stack-exchange-markdown-retriever/master.svg)](https://travis-ci.org/m4bwav/stack-exchange-markdown-retriever)
