@@ -1,6 +1,6 @@
 # stack-exchange-markdown-retriever
 
-<p align="center">>
+<p align="center">
 [![npm package](https://nodei.co/npm/stack-exchange-markdown-retriever.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/stack-exchange-markdown-retriever/)
 ![NPM Version](https://img.shields.io/npm/v/stack-exchange-markdown-retriever.svg?branch=master)
 ![downloads](https://img.shields.io/npm/dt/stack-exchange-markdown-retriever.svg)
