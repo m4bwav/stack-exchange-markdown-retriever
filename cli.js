@@ -1,5 +1,5 @@
 var program = require('commander');
-var markdownRetriever = require('./index.js');
+var markdownRetriever = require('.');
 
 program
   .usage('[options] <entityId>')

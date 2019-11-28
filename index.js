@@ -8,8 +8,8 @@ var exports = module.exports = {};
 
 function generateRequestUrl(options) {
   var baseRequestUrl = options.isForAnswer ?
-     '/2.2/answers/' + options.entityId :
-     '/2.2/questions/' + options.entityId;
+    '/2.2/answers/' + options.entityId :
+    '/2.2/questions/' + options.entityId;
 
   var queryParams = {
     // key: 'YOUR_API_KEY',
@@ -34,12 +34,13 @@ function generateRequestUrl(options) {
 function performRetrieval(options, callback) {
   function prepareToCallback(err, results) {
     var markdown = results && results.items && results.items[0] ?
-		results.items[0].body_markdown :
-		null;
+      results.items[0].body_markdown :
+      null;
 
     if (results && results.error_message) {
       throw new Error(results.error_message);
     }
+
     callback(markdown, err);
   }
 
@@ -49,14 +50,14 @@ function performRetrieval(options, callback) {
     if (error) {
       prepareToCallback(error);
     } else {
-      var body = result.body;
+      var {body} = result;
       zlib.unzip(body, function handleUnzip(error, body) {
         try {
           var bodyObj = JSON.parse(body.toString());
 
           prepareToCallback(error, bodyObj);
-        } catch (err) {
-          prepareToCallback(err);
+        } catch (error_) {
+          prepareToCallback(error_);
         }
       });
     }

@@ -1,5 +1,5 @@
 import test from 'ava';
-import stackExchangeMarkdownRetriever from './';
+import stackExchangeMarkdownRetriever from '.';
 
 global.Promise = Promise;
 
