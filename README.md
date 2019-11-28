@@ -1,6 +1,5 @@
 # stack-exchange-markdown-retriever
 
-<p align="center">
 [![npm package](https://nodei.co/npm/stack-exchange-markdown-retriever.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/stack-exchange-markdown-retriever/)
 ![NPM Version](https://img.shields.io/npm/v/stack-exchange-markdown-retriever.svg?branch=master)
 ![downloads](https://img.shields.io/npm/dt/stack-exchange-markdown-retriever.svg)
@@ -10,7 +9,6 @@
 [![Known Vulnerabilities](https://snyk.io/test/npm/stack-exchange-markdown-retriever/badge.svg?style=flat-square)](https://snyk.io/test/npm/stack-exchange-markdown-retriever)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![Gitter](https://badges.gitter.im/m4bwav/stack-exchange-markdown-retriever.svg)](https://gitter.im/m4bwav/stack-exchange-markdown-retriever?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-</p>
 
 Retrieves the markdown for a question or answer on a stack exchange site.
 
