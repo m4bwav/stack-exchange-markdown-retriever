@@ -6,7 +6,7 @@ date: 2026-09-26
 verified: 2026-09-26
 stale_after: never
 tags: [v2, plan, npm, github-actions, tests, release, golden, fetch, cli]
-summary: "the living plan for stack-exchange-markdown-retriever 2.0.0: survey, what 1.1.7 gets wrong (-a never worked, a throwing callback called twice, unchecked ids reach other API methods, no timeout, a Snyk token in history), decisions D1-D16, the v2 API with a Promise form, build and test strategy with a local fixture server, phases 0-7 with checkboxes, dispositions of 19 pull requests and 17 branches, security, verification checklist"
+summary: "the living plan for stack-exchange-markdown-retriever 2.0.0: survey, what 1.1.7 gets wrong (-a never worked, a throwing callback called twice, unchecked ids reach other API methods, no timeout, a Snyk token in history), decisions D1-D16, the v2 API with a Promise form, build and test strategy with a local fixture server, phases 0-7 with checkboxes, dispositions of 17 pull requests and 17 branches, security, verification checklist"
 ---
 
 # Modernization and v2.0.0 release plan: stack-exchange-markdown-retriever
@@ -15,7 +15,7 @@ The fourth npm run of the package-modernize skill (C:\Users\m4bwa\.claude\skills
 
 ## Status
 
-Active. Phases 0 and 1 done 2026-09-26. The kickoff stated the maintainer's recommendations and that silence means they stand; nothing in the survey contradicts them (one of them, the uncaught throw on an API error, turned out not to exist, which only removes an exception). Phase 2 goes ahead on branch `v2`; the rows the kickoff did not settle (D3b ids, D3c timeout default, D3d a throwing callback) are in the pull request's "For review" list for the maintainer's ruling at the pull request review.
+Active. Phases 0 to 3 done 2026-09-26; **stopped at the pull request review** (#22, https://github.com/m4bwav/stack-exchange-markdown-retriever/pull/22, CI run 36262493273 green on 40a1db4). The kickoff's recommendations stand (silence); nothing in the survey contradicts them (the uncaught throw on an API error turned out not to exist, which only removes an exception). Waiting for: the maintainer's review of #22 with rulings on D3b, D3c, D3d and the no-callback rejection (the "For review" list), the Snyk token revocation, and one go for the Phase 4 GitHub writes.
 
 ## Goal
 
@@ -33,7 +33,7 @@ Active. Phases 0 and 1 done 2026-09-26. The kickoff stated the maintainer's reco
 | Source, build, tests, language level | `index.js` (75 lines, ES2015 destructuring, CommonJS), `cli.js` (16 lines, commander 4, no shebang), `test.js` (ava 2: two live-API tests, one argument test); no build; xo 0.25, nyc 14, snyk, coveralls, codecov.io, execa (unused) | survey note |
 | Entry points and how the old README says to call it | `main: index.js`, `module.exports = {retrieveMarkdown}`; no `bin`; README: `require(...).retrieveMarkdown(options, function (markdown) {...})` and a global CLI `stack-exchange-markdown-retriever [-k <key>] [-a] -s "<site>" <id>` that was never installable | survey note, capture quirks |
 | Runtime dependencies and distance from current | request ^2.88.0 (2.88.2, deprecated), commander ^4.0.1 (4.1.1; latest 15.0.0) | survey |
-| Issues, pull requests (by author and kind), forks | 0 issues; 19 open pull requests: 17 Dependabot (#2, #4, #7 to #19), 2 Snyk under the maintainer's name (#20, #21); 17 branches, each the head of one of them; fork gitter-badger (2016, closed #1 only) | survey |
+| Issues, pull requests (by author and kind), forks | 0 issues; 17 open pull requests: 15 Dependabot (#2, #4, #7 to #19), 2 Snyk under the maintainer's name (#20, #21); 17 branches, each the head of one of them; fork gitter-badger (2016, closed #1 only) | survey |
 | Dependabot alerts, webhooks, secrets, security features | 99 open alerts (runtime scope through request: qs, ajv, uuid, sshpk, json-schema, request); webhooks Snyk 14564188 and 278631033, Travis 83050034; no secrets; scanning and push protection off; workflow permissions write with pull request approval; no rulesets | survey |
 | Dead services (badge, config, webhook, app for each) | Travis (badge, `.travis.yml`, webhook 83050034); Snyk (badge, `.snyk`, webhooks 14564188 and 278631033, the `snyk-fix-*` branches, the OAuth app revoked 2026-09-25); Coveralls and codecov (badge, the `coverage` and `travis-after-success` scripts, devDependencies); David (badge); Gitter (badge); nodei.co (two images) | survey note |
 | README images and badges | 10 images, the same in the repository and the tarball; 7 to fix (nodei.co twice, Travis and David "not found", Coveralls, Snyk, Gitter), 3 fine (npm version, total downloads, XO) | survey note |
@@ -69,9 +69,9 @@ Case names are those in `test/golden/1.1.7.json`.
 | D7 | Errors | Error order not flipped: callback `(markdown, err)`. Argument errors: the callback form throws synchronously as 1.1.7 did (`Error: Need an entity id to read` kept word for word for falsy ids; TypeError for bad ids and a non-function callback); the Promise form rejects with the same error. Response errors: `StackExchangeError` with `message` (the API's `error_message`, or what was wrong with the body), `errorId`, `errorName`, `status`, and `cause` for decode failures. Network errors and timeouts: the platform's error as is (`TypeError: fetch failed`, `TimeoutError`, the signal's reason). No error text includes the `key`. | Kickoff ruling (keep the order; typed errors in the Promise form). | Wrap network errors in `StackExchangeError` too. |
 | D8 | Node floor and the CI matrix | `engines.node >=20`; Node 20, 22, 24, 26 on Linux, Node 24 on Windows and macOS, Bun, Deno. | The overlay's standing decision; fetch, `DecompressionStream`, `AbortSignal.timeout` and `parseArgs` are all in Node 20. | |
 | D9 | Language, build, lint, tests, coverage | The npm defaults: TypeScript ~6.0.3, tsdown 0.23.0 pinned, xo ^5.0.1, node:test against `dist/`, c8 95 and 90, publint, attw, consumer fixtures; the capture's fixture server for the golden, functional and CLI suites; `live.yml` weekly with two real requests. | Same toolchain as the finished runs. | Skip `live.yml`. |
-| D10 | Lockfile and the old bot pull requests | A new `package-lock.json` (lockfileVersion 3) under the template's `.npmrc` (`min-release-age=3`). After the merge, with alerts at 0, close the 19 bot pull requests with one comment each naming the merge commit and delete their 17 branches through `post-merge-cleanup.sh` (**needs the maintainer's go in Phase 4**). | The regeneration removes every package they bump. | Leave the branches. |
+| D10 | Lockfile and the old bot pull requests | A new `package-lock.json` (lockfileVersion 3) under the template's `.npmrc` (`min-release-age=3`). After the merge, with alerts at 0, close the 17 bot pull requests with one comment each naming the merge commit and delete their 17 branches through `post-merge-cleanup.sh` (**needs the maintainer's go in Phase 4**). | The regeneration removes every package they bump. | Leave the branches. |
 | D11 | Dead services, and each README badge and image | Remove every image except the three standard badges (table below). Remove `.travis.yml`, `.snyk`, `.vscode/`, the coverage scripts and devDependencies. Delete webhooks 14564188, 278631033 (Snyk) and 83050034 (Travis) (**needs the go in Phase 4**). The maintainer checks github.com/settings/applications for Travis CI and Coveralls grants. | The services are gone or unused. | Keep the XO badge. |
-| D12 | Old files to remove | `index.js`, `cli.js`, `test.js`, `.travis.yml`, `.snyk`, `.vscode/launch.json`, `package-lock.json` (regenerated); `.gitignore` from the template. | Replaced by `src/`, `test/` and the templates. | |
+| D12 | Old files to remove | `index.js`, `cli.js`, `test.js`, `.travis.yml`, `.snyk`, .vscode/launch.json, `package-lock.json` (regenerated); `.gitignore` from the template. | Replaced by `src/`, `test/` and the templates. | |
 | D13 | Release and version, rehearsal | `2.0.0-beta.1` under `next` through `release.yml` (the template's, GitHub Release in its own job), the maintainer approves, `verify-registry-npm.sh`; then `2.0.0` under `latest`. The trusted publisher already exists (overlay, 2026-09-26); the first staging run proves it. | Kickoff ruling. | |
 | D14 | Default branch and optional extras | Keep `master`. Branch ruleset copied from get-title-at-url's 24003504 and the admins-only tag ruleset (`--tag-ruleset`); settings through `gh`: description, homepage the npm page, topics, wiki and projects off, delete-branch-on-merge, secret scanning, push protection, private vulnerability reporting, workflow permissions read (the overlay allows settings; the list goes to the maintainer before Phase 4). No JSR. | The overlay's standing decisions. | |
 | D15 | Dependents: what the next run can rely on | None known. A caller of 1.1.7 can move to `^2.0.0` with `require(...).retrieveMarkdown(options, cb)` unchanged for real ids, and can await `retrieveMarkdown(options)`. | | |
@@ -119,16 +119,16 @@ The callback form throws an Error when `options.entityId` is falsy (1.1.7's mess
 ### Phase 1: plan
 - [x] This plan and the decision record [../decisions/2026-09-26-v2-shape-callback-kept-promise-added-fetch-named-exceptions.md](../decisions/2026-09-26-v2-shape-callback-kept-promise-added-fetch-named-exceptions.md). **Stop**: the kickoff's recommendations stand (silence); D3b, D3c and D3d go to the pull request review; the Snyk token (Security) needs the maintainer.
 ### Phase 2: rewrite on branch v2
-- [ ] Remove the D12 files; add the templates; deny dev-only install scripts
-- [ ] Golden test first, green on the first build; canary: a planted line in src/ turns it red, reverted, green (both runs logged); golden files unchanged since 15475a7 (`check-golden-untouched.sh`); then src/, the rest of test/, README, CHANGELOG, SECURITY.md, AGENTS.md
-- [ ] Verified on Node 20, 22, 24, 26 and from a fresh clone (log)
-- [ ] Workflows and Dependabot added, actionlint and `check-workflow-shell.py` clean
-- [ ] Pushed; pull request opened with a "For review" list. **Stop.**
+- [x] Remove the D12 files; add the templates; deny dev-only install scripts (2026-09-26)
+- [x] Golden test first, green on the first build (292/292, 984df24); canary: 'asc' planted as 'desc', 220 of 292 red, reverted, green; golden files unchanged since 15475a7 (`check-golden-untouched.sh` PASS); then src/, the rest of test/, README, CHANGELOG, SECURITY.md, AGENTS.md (3360719)
+- [x] Verified on Node 20, 22, 24, 26 and from a fresh clone (log; 364/364, then 371/371 after the review)
+- [x] Workflows and Dependabot added, actionlint 1.7.12, `check-workflow-shell.py` and zizmor clean
+- [x] Pushed; pull request #22 opened with a "For review" list (2026-09-26). **Stop.**
 ### Phase 3: review
-- [ ] Independent read-only review (prompts/review-subagent.md); findings fixed or answered; summary on the pull request
+- [x] Independent read-only review (prompts/review-subagent.md): 8 findings, 7 fixed and 1 answered (40a1db4); summary on #22 (2026-09-26)
 ### Phase 4: CI, settings, merge, cleanup
 - [ ] CI green (run id); ruleset on master before the merge; merge after the maintainer's review (read the SHA and method back)
-- [ ] One go from the maintainer for the whole cleanup list (the dry run of `post-merge-cleanup.sh` with ai-docs/notes/dispositions.tsv), then `--apply` (with `--tag-ruleset`): alerts 0; tag ruleset; 19 bot pull requests closed; 17 branches deleted; 3 webhooks removed; repo settings; secret scanning and push protection; private vulnerability reporting; workflow permissions read
+- [ ] One go from the maintainer for the whole cleanup list (the dry run of `post-merge-cleanup.sh` with ai-docs/notes/dispositions.tsv), then `--apply` (with `--tag-ruleset`): alerts 0; tag ruleset; 17 bot pull requests closed; 17 branches deleted; 3 webhooks removed; repo settings; secret scanning and push protection; private vulnerability reporting; workflow permissions read
 ### Phase 5: release rehearsal
 - [ ] `preflight-tag-npm.sh 2.0.0-beta.1` READY; tagged; `watch-run.sh` shows the stage id; **stop** for the approval; `verify-registry-npm.sh` VERIFIED (run id)
 ### Phase 6: release
@@ -213,6 +213,7 @@ All closing happens in Phase 4, after the v2 merge and with alerts at 0. `{SHA}`
 - The real API may answer something the fixture does not model (a `backoff` field, other error names); the promise covers only the recorded cases. `live.yml` watches the two ordinary cases weekly.
 - Bun's and Deno's fetch may send other headers; the golden suite runs on Node only.
 - The CLI's `-s` takes the next argument as its value in both 1.1.7 and v2 (`-s 1` leaves no id); kept.
+- DecompressionStream answers some malformed bodies differently per Node line (gzip followed by junk, two gzip members; see test/functional/decoding.test.js); the API sends one gzip member, so only the cases every line agrees on are pinned.
 
 ## Appendix: cleanup commands (all paths absolute)
 
@@ -224,4 +225,4 @@ bash C:/Users/m4bwa/.claude/skills/package-modernize/scripts/post-merge-cleanup.
 
 ## Next single action
 
-Create branch `v2` from master and write the golden test first.
+The maintainer reviews #22 and rules on its "For review" list; then list every Phase 4 GitHub write in one message (from ai-docs/notes/dispositions.tsv and the dry run of post-merge-cleanup.sh) and take the go.
