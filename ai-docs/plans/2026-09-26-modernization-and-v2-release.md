@@ -15,7 +15,7 @@ The fourth npm run of the package-modernize skill (C:\Users\m4bwa\.claude\skills
 
 ## Status
 
-Active. Phases 0 to 3 done 2026-09-26; **stopped at the pull request review** (#22, https://github.com/m4bwav/stack-exchange-markdown-retriever/pull/22, CI run 36262493273 green on 40a1db4). The kickoff's recommendations stand (silence); nothing in the survey contradicts them (the uncaught throw on an API error turned out not to exist, which only removes an exception). Waiting for: the maintainer's review of #22 with rulings on D3b, D3c, D3d and the no-callback rejection (the "For review" list), the Snyk token revocation, and one go for the Phase 4 GitHub writes.
+Active. Phases 0 to 4 done 2026-09-26 (PR #22 merged as f17aef4, cleanup applied). Phase 5 waits: the beta tag push was refused by the agent's permission layer; Mark runs it or says "run it" (commands in HANDOFF.md). Open: the Snyk token.
 
 ## Goal
 
@@ -127,10 +127,10 @@ The callback form throws an Error when `options.entityId` is falsy (1.1.7's mess
 ### Phase 3: review
 - [x] Independent read-only review (prompts/review-subagent.md): 8 findings, 7 fixed and 1 answered (40a1db4); summary on #22 (2026-09-26)
 ### Phase 4: CI, settings, merge, cleanup
-- [ ] CI green (run id); ruleset on master before the merge; merge after the maintainer's review (read the SHA and method back)
-- [ ] One go from the maintainer for the whole cleanup list (the dry run of `post-merge-cleanup.sh` with ai-docs/notes/dispositions.tsv), then `--apply` (with `--tag-ruleset`): alerts 0; tag ruleset; 17 bot pull requests closed; 17 branches deleted; 3 webhooks removed; repo settings; secret scanning and push protection; private vulnerability reporting; workflow permissions read
+- [x] Merged by Mark 2026-09-26 as a merge commit f17aef4 (read back); ci on master 36262995830 green; the ruleset came after the merge (Mark merged before Phase 4)
+- [x] One go from the maintainer for the whole cleanup list (2026-09-26; rulesets 24047775 and 24047776; see log) (the dry run of `post-merge-cleanup.sh` with ai-docs/notes/dispositions.tsv), then `--apply` (with `--tag-ruleset`): alerts 0; tag ruleset; 17 bot pull requests closed; 17 branches deleted; 3 webhooks removed; repo settings; secret scanning and push protection; private vulnerability reporting; workflow permissions read
 ### Phase 5: release rehearsal
-- [ ] `preflight-tag-npm.sh 2.0.0-beta.1` READY; tagged; `watch-run.sh` shows the stage id; **stop** for the approval; `verify-registry-npm.sh` VERIFIED (run id)
+- [ ] `preflight-tag-npm.sh 2.0.0-beta.1` READY (2026-09-26); tag refused by the agent's permission layer, waits for Mark; `watch-run.sh` shows the stage id; **stop** for the approval; `verify-registry-npm.sh` VERIFIED (run id)
 ### Phase 6: release
 - [ ] Changelog dated; `preflight-tag-npm.sh 2.0.0` READY; tagged and staged; **stop** for the approval; `verify-registry-npm.sh` VERIFIED
 - [ ] 1.x deprecated by the CLI with the full message in D4; `npm view stack-exchange-markdown-retriever@1.1.7 deprecated` shows it
