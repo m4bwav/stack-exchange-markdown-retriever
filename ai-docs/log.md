@@ -14,3 +14,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-09-26] add | note: Phase 0 survey, baseline, capture and security of 1.1.7
 ## [2026-09-26] update | AGENTS.md (template adapted, everlast block), CLAUDE.md (@AGENTS.md import first), .github/copilot-instructions.md pointer and .gitattributes (LF) added
 ## [2026-09-26] index | rebuilt (1 entries)
+## [2026-09-26] add | Phase 0 committed on master: 15475a7 (golden JSON, capture script and codec fixed from here on)
+## [2026-09-26] add | decision: v2 keeps the callback's URL and answers, adds a Promise form, uses fetch, validates ids, fixes the CLI (accepted by default; D3b, D3c, D3d for the pull request review)
+## [2026-09-26] add | plan: Modernization and v2 release (D1 to D16); the kickoff's recommendations stand by silence and nothing in the survey contradicts them, so Phase 2 proceeds; questions for the maintainer: the Snyk token, D3b ids, D3c timeout default, D3d throwing callback, and the Phase 4 go list
+## [2026-09-26] index | rebuilt (3 entries)

@@ -14,7 +14,7 @@ summary: "read before the plan or the cleanup: what 1.1.7 is and ships, the old 
 
 ## Summary
 
-Surveyed 2026-09-26 with the package-modernize skill's `scripts/survey-npm.sh` (raw output below), Node 24.18.0 and npm 11.16.0 on Windows. Nothing in the package changed during Phase 0. The golden capture of the published 1.1.7 is `test/golden/1.1.7.json` (see the plan for the cases and the exceptions).
+Surveyed 2026-09-26 with the package-modernize skill's scripts/survey-npm.sh (raw output below), Node 24.18.0 and npm 11.16.0 on Windows. Nothing in the package changed during Phase 0. The golden capture of the published 1.1.7 is `test/golden/1.1.7.json` (see the plan for the cases and the exceptions).
 
 ## Registry and repository
 
