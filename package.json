@@ -1,6 +1,6 @@
 {
   "name": "stack-exchange-markdown-retriever",
-  "version": "1.1.7",
+  "version": "2.0.0-beta.1",
   "description": "Retrieve the markdown source of a question or an answer on Stack Overflow or any Stack Exchange site, with a command line tool. Zero dependencies, TypeScript, ESM and CommonJS, Node 20+.",
   "license": "MIT",
   "repository": {
