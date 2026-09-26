@@ -5,12 +5,8 @@
 ## Current state
 2.0.0 is released (2026-09-26): npm latest 2.0.0, next 2.0.0-beta.1, provenance and signatures verified (verify-registry-npm.sh VERIFIED; release run 36264098125). master is protected by ruleset 24047775 (required check `ci`), tags by ruleset 24047776 (admins only). No open pull requests, 0 webhooks, 0 alerts.
 
-## Mark's tasks (open)
-- Deprecate 1.x in his own terminal (the agent shell gets EOTP):
-  npm deprecate stack-exchange-markdown-retriever@"<2" "1.x depends on the deprecated request package, its CLI was never installable and -a was ignored; use 2.x"
-  Check: npm view stack-exchange-markdown-retriever@1.1.7 deprecated
-- Revoke the Snyk API token that sat in package.json of 1.1.4 and 1.1.5 (snyk.io account settings), or confirm the account is closed.
-- Delete the merged branch v2 (refused for the agent): git push origin --delete v2
+## Mark's tasks
+None open. 1.x deprecated (read back 2026-09-26 on 1.0.0 and 1.1.7 with --prefer-online); merged branch v2 deleted 2026-09-26. The Snyk token from 1.1.4 and 1.1.5 was not revoked: Mark's Snyk login is too old to use and he chose not to pursue it (2026-09-26).
 
 ## Standing work
 - Dependabot pull requests weekly: merge when `ci` is green; read release notes for majors; TypeScript 7 is held in dependabot.yml until xo supports it.
