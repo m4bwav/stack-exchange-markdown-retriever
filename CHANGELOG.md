@@ -14,12 +14,13 @@ All notable changes to this package are documented here. The format follows [Kee
 - A callback that is not a function throws a `TypeError` before any request. 1.1.7 made the request, then crashed the process with an uncaught `TypeError`.
 - Requests use the platform's `fetch`. On Node, `HTTPS_PROXY` and `NO_PROXY` are read only when Node is told to (`NODE_USE_ENV_PROXY=1` or `--use-env-proxy`, on the Node lines that have them); 1.1.7's `request` always read them.
 - A request that gets no answer fails after 30 seconds with a `TimeoutError` (the new `timeout` option; `0` turns it off). 1.1.7 waited for ever.
-- The command-line tool prints errors to stderr, without a stack trace, and exits 1. 1.1.7's `cli.js` printed `null` and exited 0 for every error. A post that does not exist still prints `null` and exits 0.
+- The command-line tool prints errors to stderr, without a stack trace, and exits 1. 1.1.7's `cli.js` printed `null` and exited 0 for every error. A post that does not exist still prints `null` and exits 0; so does a post without markdown (1.1.7 printed `undefined`). `-s` or `-k` without a value is an error (1.1.7 sent `site=true` or `key=true`).
 
 ### Fixed
 
 - A callback that throws is called once; its exception still surfaces as an uncaught exception. 1.1.7 caught it and called the callback a second time with that exception as the error.
 - A response that is plain JSON (a proxy that had already decompressed it) is read. 1.1.7 failed on anything that was not gzip or deflate data.
+  Zero padding after gzip data, and extra bytes after zlib data, are still read, as 1.1.7 read them.
 - The command-line tool's `-a`/`--answer` fetches the answer. 1.1.7 ignored it and fetched the question with that id.
 
 ### Added
@@ -36,6 +37,7 @@ All notable changes to this package are documented here. The format follows [Kee
 
 - No runtime dependencies. 1.x depends on the deprecated `request` package, whose tree carries critical and high advisories.
 - Ids are checked (see Changed): no path injection.
+- A compressed response may expand to at most 64 MiB; a larger one fails with a `StackExchangeError`. 1.1.7 had no limit.
 
 ## [1.1.7] - 2019-11-28
 

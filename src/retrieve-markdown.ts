@@ -35,9 +35,10 @@ export type RetrieveMarkdownOptions = {
 
 /**
 The callback: the markdown (or `null` when there is no such post, or on an error) first, the error second. Not error-first:
-this is the order 1.1.7 used, kept for compatibility.
+this is the order 1.1.7 used, kept for compatibility. As in 1.1.7, the markdown is the API's `body_markdown` as sent, so it is
+`undefined` for a post the API returned without that field.
 */
-export type RetrieveMarkdownCallback = (markdown: string | null, error: Error | null) => void;
+export type RetrieveMarkdownCallback = (markdown: string | null | undefined, error: Error | null) => void;
 
 const API = 'https://api.stackexchange.com';
 const FILTER = '!L_(I6pMIzdXP-hC1clc9EY';
@@ -98,14 +99,59 @@ function prepare(options: RetrieveMarkdownOptions): Request {
   return {url: `${API}/2.2/${kind}/${path}?${stringifyQuery(pairs)}`, timeout, signal};
 }
 
-async function inflate(bytes: Uint8Array, format: 'gzip' | 'deflate'): Promise<Uint8Array> {
-  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream(format));
-  return new Uint8Array(await new Response(stream).arrayBuffer());
+// 1.1.7's zlib.unzip ignored bytes after the end of the compressed data (padding some proxies add); DecompressionStream
+// fails on them. So the output is kept as it arrives, and a failure is reported only if that output is not the API's JSON.
+// A cap on the output keeps a small compressed body from expanding without bound.
+const MAX_INFLATED = 64 * 1024 * 1024;
+
+type Decoded = {text: string; failure?: {format: string; error: unknown}};
+
+async function inflate(bytes: Uint8Array, format: 'gzip' | 'deflate', status: number): Promise<{bytes: Uint8Array; error?: unknown}> {
+  const reader = new Blob([bytes]).stream().pipeThrough(new DecompressionStream(format)).getReader() as ReadableStreamDefaultReader<Uint8Array>;
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    for (;;) {
+      // eslint-disable-next-line no-await-in-loop -- one chunk at a time, to stop at the cap.
+      const {done, value} = await reader.read();
+      if (done) {
+        break;
+      }
+
+      size += value.length;
+      if (size > MAX_INFLATED) {
+        // eslint-disable-next-line no-await-in-loop -- once, before leaving the loop.
+        await reader.cancel();
+        throw new StackExchangeError(`The decompressed response is larger than ${MAX_INFLATED} bytes`, {status});
+      }
+
+      chunks.push(value);
+    }
+  } catch (error) {
+    if (error instanceof StackExchangeError) {
+      throw error;
+    }
+
+    return {bytes: join(chunks, size), error};
+  }
+
+  return {bytes: join(chunks, size)};
 }
 
-// The platform's fetch undoes a Content-Encoding itself. 1.1.7 ran every body through zlib.unzip, which also read gzip and zlib data sent
-// without the header; that is kept by looking at the first bytes.
-async function decode(bytes: Uint8Array, status: number): Promise<string> {
+function join(chunks: Uint8Array[], size: number): Uint8Array {
+  const joined = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    joined.set(chunk, offset);
+    offset += chunk.length;
+  }
+
+  return joined;
+}
+
+// The platform's fetch undoes a Content-Encoding itself. 1.1.7 ran every body through zlib.unzip, which also read gzip and
+// zlib data sent without the header; that is kept by looking at the first bytes.
+async function decode(bytes: Uint8Array, status: number): Promise<Decoded> {
   const [first = 0, second = 0] = bytes;
   let format: 'gzip' | 'deflate' | undefined;
   if (first === 0x1F && second === 0x8B) {
@@ -115,18 +161,20 @@ async function decode(bytes: Uint8Array, status: number): Promise<string> {
     format = 'deflate';
   }
 
-  let text = bytes;
+  let data = bytes;
+  let failure: Decoded['failure'];
   if (format) {
-    try {
-      text = await inflate(bytes, format);
-    } catch (error) {
-      throw new StackExchangeError(`The response could not be decompressed (${format})`, {status, cause: error});
+    const inflated = await inflate(bytes, format, status);
+    data = inflated.bytes;
+    if ('error' in inflated) {
+      failure = {format, error: inflated.error};
     }
   }
 
   // ignoreBOM: a byte order mark stays in the text, so JSON.parse refuses it as 1.1.7's Buffer.toString did.
   // eslint-disable-next-line @typescript-eslint/naming-convention -- TextDecoder's own option name.
-  return new TextDecoder('utf-8', {ignoreBOM: true}).decode(text);
+  const text = new TextDecoder('utf-8', {ignoreBOM: true}).decode(data);
+  return failure ? {text, failure} : {text};
 }
 
 type ApiResponse = {
@@ -161,11 +209,15 @@ async function perform(request: Request): Promise<unknown> {
   try {
     const response = await fetch(request.url, {signal: controller.signal});
     const bytes = new Uint8Array(await response.arrayBuffer());
-    const text = await decode(bytes, response.status);
+    const {text, failure} = await decode(bytes, response.status);
     let results: ApiResponse;
     try {
       results = JSON.parse(text) as ApiResponse;
     } catch (error) {
+      if (failure) {
+        throw new StackExchangeError(`The response could not be decompressed (${failure.format})`, {status: response.status, cause: failure.error});
+      }
+
       throw new StackExchangeError('The response is not JSON', {status: response.status, cause: error});
     }
 
@@ -199,6 +251,7 @@ Without a callback, returns a Promise of the markdown (or `null`) that rejects w
 */
 export function retrieveMarkdown(options: RetrieveMarkdownOptions, callback: RetrieveMarkdownCallback): void;
 export function retrieveMarkdown(options: RetrieveMarkdownOptions): Promise<string | null>;
+export function retrieveMarkdown(options: RetrieveMarkdownOptions, callback?: RetrieveMarkdownCallback | null): Promise<string | null> | void;
 export function retrieveMarkdown(options: RetrieveMarkdownOptions, callback?: RetrieveMarkdownCallback | null): Promise<string | null> | void {
   if (callback === undefined || callback === null) {
     try {
@@ -222,7 +275,7 @@ export function retrieveMarkdown(options: RetrieveMarkdownOptions, callback?: Re
   perform(request)
     .then(markdown => {
       queueMicrotask(() => {
-        callback(markdown as string | null, null);
+        callback(markdown as string | null | undefined, null);
       });
     })
     .catch((error: unknown) => {

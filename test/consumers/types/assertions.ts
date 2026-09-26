@@ -26,7 +26,7 @@ const options: RetrieveMarkdownOptions = {
 
 const promised = retrieveMarkdown(options);
 const callback: RetrieveMarkdownCallback = (markdown, error) => {
-  expectType<string | null>(markdown);
+  expectType<string | null | undefined>(markdown);
   expectType<Error | null>(error);
 };
 
@@ -39,6 +39,10 @@ expectType<number>(error.status);
 expectType<number | undefined>(error.errorId);
 expectType<string | undefined>(error.errorName);
 expectType<Error>(error);
+
+// A wrapper passing a callback it may not have: the union overload accepts it.
+declare const maybeCallback: RetrieveMarkdownCallback | undefined;
+export const wrapped: void | Promise<string | null> = retrieveMarkdown({entityId: 1}, maybeCallback);
 
 export type Checks = [
   Expect<Equal<typeof promised, Promise<string | null>>>,

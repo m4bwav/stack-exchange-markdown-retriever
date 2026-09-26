@@ -88,7 +88,8 @@ The default export holds both: `import retriever from 'stack-exchange-markdown-r
 | post without `body_markdown` | callback: `undefined`; Promise: `null` |
 | the API's error (`error_message`) | `StackExchangeError` with the API's message |
 | HTML error page, empty or cut-off response | `StackExchangeError`: "The response is not JSON" |
-| gzip or deflate response, with or without its header | decoded |
+| gzip or deflate response, with or without its header (zero padding after gzip data and extra bytes after zlib data included) | decoded |
+| a compressed response that expands past 64 MiB | `StackExchangeError` |
 | a server that never answers | `TimeoutError` after 30 s by default |
 | a callback that throws | called once; the exception is uncaught |
 

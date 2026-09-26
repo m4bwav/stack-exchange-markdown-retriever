@@ -141,3 +141,15 @@ test('errors never print a stack trace or the API key', async () => {
     assert.doesNotMatch(result.stderr, /SECRETKEY/u);
   }
 });
+
+test('a post without body_markdown prints null (1.1.7 printed undefined), and -s or -k without a value is an error', async () => {
+  const missing = await run(['9003']);
+  assert.equal(missing.code, 0);
+  assert.equal(missing.stdout, 'null\n');
+  for (const flag of ['-s', '-k']) {
+    const result = await run(['1', flag]);
+    assert.equal(result.code, 1, flag);
+    assert.match(result.stderr, /^error: Option '-[ks], --(?:site|apiKey) <value>' argument missing/u, flag);
+    assert.deepEqual(result.requests, [], flag);
+  }
+});
