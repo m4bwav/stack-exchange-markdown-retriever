@@ -2,7 +2,7 @@
 
 All notable changes to this package are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the package uses [Semantic Versioning](https://semver.org/).
 
-## [2.0.0] - Unreleased
+## [2.0.0] - 2026-09-26
 
 **The compatibility promise.** `require('stack-exchange-markdown-retriever').retrieveMarkdown(options, callback)` builds the same request URL 1.1.7 built (`https://api.stackexchange.com/2.2/...`, the same filter and parameters) and calls back in the same order, `(markdown, err)`, with the same markdown, `null` for a post that does not exist, and an error where 1.1.7 had one. The test suite checks this against 90 calls and 20 command-line runs recorded from the published 1.1.7 against a local test server, on both builds and every supported Node line. The exceptions are listed below; each one was a crash, a wrong answer or a way into other API methods: errors are `StackExchangeError` objects (API errors keep their message), an id that is not a post id throws, a callback that is not a function throws, a callback that throws is not called a second time, a plain-JSON response is read, and the command-line tool's `-a` works and its errors exit 1.
 
