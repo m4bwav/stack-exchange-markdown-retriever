@@ -2,9 +2,9 @@
 Consumer fixtures: install the package into a scratch project outside the repository, and use each published artifact the way a consumer would. Needs the network once to install TypeScript and the Node types into that project (the npm cache usually has them).
 
 - By default the package is the tarball `npm pack` makes from the current dist/; `npm run test:consumers` builds dist/ first. CI builds once on Node 24 and runs this file directly on each Node line, because the build tools need Node 22.18 or later.
-- CONSUMER_PACKAGE=is-an-image-url@<version> installs that version from the registry instead of packing; verify-published.yml checks a release this way.
+- CONSUMER_PACKAGE=stack-exchange-markdown-retriever@<version> installs that version from the registry instead of packing; verify-published.yml checks a release this way.
 - CONSUMER_RUNTIMES=bun,deno also runs the ES module fixture, the CommonJS fixture (Bun only) and the bin under Bun and Deno; the CI Bun and Deno jobs set it. A runtime it names must be installed.
-- The fixtures that make requests talk to test/golden/fixture-server.cjs, which this file starts on 127.0.0.1; nothing here touches the internet after the install.
+- The fixtures that make requests talk to test/golden/fixture-server.cjs, which this file starts on 127.0.0.1: each runtime fixture replaces fetch with one that sends https://api.stackexchange.com requests there, and the bin runs with test/helpers/cli-preload.mjs loaded, so nothing here touches the internet after the install.
 */
 import assert from 'node:assert/strict';
 import {exec, execFile} from 'node:child_process';
@@ -20,7 +20,7 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import {after, before, test} from 'node:test';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
 
 const load = createRequire(import.meta.url);
 const root = fileURLToPath(new URL('../..', import.meta.url));
@@ -80,7 +80,7 @@ function unlessRuntime(name) {
 }
 
 before(async () => {
-  workspace = await mkdtemp(path.join(tmpdir(), 'is-an-image-url-consumers-'));
+  workspace = await mkdtemp(path.join(tmpdir(), 'semr-consumers-'));
   let spec = registryPackage;
   if (spec === undefined) {
     // Pack without lifecycle scripts, so stdout holds only npm's JSON and the tarball holds the dist/ under test.
@@ -104,6 +104,9 @@ before(async () => {
   for (const fixture of TYPE_FIXTURES) {
     await cp(path.join(fixtures, 'types', 'assertions.ts'), path.join(workspace, fixture, 'index.ts'));
   }
+
+  // The fetch wrapper the bin runs with (see the bin test).
+  await cp(path.join(root, 'test', 'helpers'), path.join(workspace, 'helpers'), {recursive: true});
 
   server = await fixtureServer.start();
 });
@@ -146,18 +149,26 @@ for (const fixture of TYPE_FIXTURES) {
   });
 }
 
-test('bin: npx runs the installed is-an-image-url command', async () => {
+test('bin: npx runs the installed stack-exchange-markdown-retriever command', async () => {
   if (process.platform === 'win32') {
-    await access(path.join(workspace, 'node_modules', '.bin', 'is-an-image-url.cmd'));
+    await access(path.join(workspace, 'node_modules', '.bin', 'stack-exchange-markdown-retriever.cmd'));
   }
 
-  // --no: never download; the command must come from the installed package.
-  const image = await shell(`npx --no is-an-image-url ${server.base}/image`, workspace);
-  assert.equal(image.code, 0, image.output);
-  assert.equal(image.stdout.trim(), 'true');
-  const page = await shell(`npx --no is-an-image-url ${server.base}/html`, workspace);
-  assert.equal(page.code, 0, page.output);
-  assert.equal(page.stdout.trim(), 'false');
+  // --no: never download; the command must come from the installed package. The preload points fetch at the fixture server.
+  const preload = pathToFileURL(path.join(workspace, 'helpers', 'cli-preload.mjs')).href;
+  const environment = `FIXTURE_BASE=${server.base}`;
+  const withPreload = command => (process.platform === 'win32'
+    ? `set "${environment}" && set "NODE_OPTIONS=--import=${preload}" && ${command}`
+    : `${environment} NODE_OPTIONS="--import=${preload}" ${command}`);
+  const question = await shell(withPreload('npx --no stack-exchange-markdown-retriever 1'), workspace);
+  assert.equal(question.code, 0, question.output);
+  assert.equal(question.stdout.trim(), 'Question one.');
+  const answer = await shell(withPreload('npx --no -- stack-exchange-markdown-retriever -a 1010'), workspace);
+  assert.equal(answer.code, 0, answer.output);
+  assert.match(answer.stdout, /^The answer is \[42\]/u);
+  const version = await shell('npx --no -- stack-exchange-markdown-retriever --version', workspace);
+  assert.equal(version.code, 0, version.output);
+  assert.match(version.stdout.trim(), /^\d+\.\d+\.\d+/u);
 });
 
 test('bun: the ES module fixture', {skip: unlessRuntime('bun')}, async () => {
@@ -173,10 +184,10 @@ test('bun: the CommonJS fixture', {skip: unlessRuntime('bun')}, async () => {
 });
 
 test('bun: bunx runs the installed bin on Bun', {skip: unlessRuntime('bun')}, async () => {
-  // --bun: run under Bun despite the node shebang; --no-install: never download.
-  const result = await run('bunx', ['--bun', '--no-install', 'is-an-image-url', `${server.base}/image`], workspace);
+  // --bun: run under Bun despite the node shebang; --no-install: never download. --help needs no request.
+  const result = await run('bunx', ['--bun', '--no-install', 'stack-exchange-markdown-retriever', '--help'], workspace);
   assert.equal(result.code, 0, result.output);
-  assert.equal(result.stdout.trim(), 'true');
+  assert.match(result.stdout, /Usage/u);
 });
 
 // --node-modules-dir=manual: Deno resolves from the node_modules npm created, as Node does.
@@ -189,7 +200,7 @@ test('deno: the ES module fixture', {skip: unlessRuntime('deno')}, async () => {
 });
 
 test('deno: the bin', {skip: unlessRuntime('deno')}, async () => {
-  const result = await run('deno', [...DENO_RUN, 'node_modules/is-an-image-url/dist/cli.mjs', `${server.base}/image`], workspace);
+  const result = await run('deno', [...DENO_RUN, 'node_modules/stack-exchange-markdown-retriever/dist/cli.mjs', '--help'], workspace);
   assert.equal(result.code, 0, result.output);
-  assert.equal(result.stdout.trim(), 'true');
+  assert.match(result.stdout, /Usage/u);
 });

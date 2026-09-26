@@ -1,13 +1,13 @@
 /**
-TEMPLATE (package-modernize): xo 5 flat config. Every override carries its reason; delete the ones the package does not need
-and add new ones the same way. A rule turned off without a reason is a review finding.
+Xo 5 flat config. Every override carries its reason; a rule turned off without a reason is a review finding.
 @type {import('xo').FlatXoConfig}
 */
 const xoConfig = [
   {
     // The type fixture imports the built package, so it only resolves after a build; the consumer fixtures type-check it against the installed tarball instead.
     // The capture scripts ran in scratch projects against the old package and are kept exactly as they were run; the golden JSON files are captured data.
-    ignores: ['ai-docs/**', 'test/consumers/types/**', 'test/golden/*.cjs', 'test/golden/*.json'],
+    // The TypeScript 5 fixture uses `import = require()` on purpose and is compiled by its own TypeScript in the consumer workspace.
+    ignores: ['ai-docs/**', 'test/consumers/types/**', 'test/consumers/ts5-cjs-interop-off/**', 'test/golden/*.cjs', 'test/golden/*.json'],
   },
   {
     files: ['**/*.md'],
@@ -39,7 +39,33 @@ const xoConfig = [
     },
   },
   {
-    files: ['test/**/*.{js,cjs,ts}'],
+    // 1.1.7 decided with JavaScript truthiness (a falsy entityId is missing, a falsy apiKey is left out, a falsy site means the
+    // default, a truthy isForAnswer or error_message counts); the golden capture pins those answers, so the checks stay truthy.
+    // Number and String wrapper objects are unwrapped on purpose (1.1.7 accepted them as ids). `null` is the answer 1.1.7
+    // documented for "no such post" and passed as the callback's error on success, so the public types say null.
+    // describe() shows any value the caller passed in an error message.
+    files: ['src/retrieve-markdown.ts'],
+    rules: {
+      '@typescript-eslint/strict-boolean-expressions': 'off',
+      '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/no-restricted-types': 'off',
+      '@typescript-eslint/no-base-to-string': 'off',
+      'unicorn/no-instanceof-builtins': 'off',
+    },
+  },
+  {
+    // The tests and consumer fixtures replace fetch on purpose, to send the package's requests to the local fixture server.
+    // body_markdown is the API's field name. The wrapper objects are the odd inputs the golden capture recorded.
+    files: ['test/**/*.{js,cjs,mjs,ts}'],
+    rules: {
+      'unicorn/no-global-object-property-assignment': 'off',
+      camelcase: ['error', {allow: ['body_markdown']}],
+      'no-new-wrappers': 'off',
+      'unicorn/new-for-builtins': 'off',
+    },
+  },
+  {
+    files: ['test/**/*.{js,cjs,mjs,ts}'],
     rules: {
       // The test scripts name their files, so helpers, fixtures and capture scripts can live under test/.
       'node-test/no-import-test-files': 'off',

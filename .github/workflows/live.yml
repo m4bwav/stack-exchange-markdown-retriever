@@ -1,5 +1,5 @@
-# Opt-in live smoke test against real sites (example.com, google.com, yahoo.com), weekly and on demand.
-# Never part of the pull request gate: a site changing its markup is not a bug in this package. A failure opens
+# Opt-in live smoke test against the real Stack Exchange API (two requests), weekly and on demand.
+# Never part of the pull request gate: a post being edited or the quota running out is not a bug in this package. A failure opens
 # nothing; it shows red on the Actions tab.
 name: live
 

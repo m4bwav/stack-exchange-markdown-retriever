@@ -7,7 +7,7 @@ call as a refused or dropped connection would, without a request. Nothing here e
 const API_ORIGIN = 'https://api.stackexchange.com';
 
 export function installFetch(server) {
-  const original = globalThis.fetch;
+  const original = fetch;
   const state = {
     server,
     urls: [],

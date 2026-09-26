@@ -26,7 +26,10 @@ function primitive(value: QueryValue): string {
       return value ? 'true' : 'false';
     }
 
-    default: {
+    case 'symbol':
+    case 'undefined':
+    case 'object':
+    case 'function': {
       return '';
     }
   }

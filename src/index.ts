@@ -7,5 +7,6 @@ export type {StackExchangeErrorDetails} from './errors.js';
 export {retrieveMarkdown} from './retrieve-markdown.js';
 export type {RetrieveMarkdownCallback, RetrieveMarkdownOptions} from './retrieve-markdown.js';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention -- a class keeps its PascalCase name.
 const stackExchangeMarkdownRetriever = {retrieveMarkdown, StackExchangeError};
 export default stackExchangeMarkdownRetriever;

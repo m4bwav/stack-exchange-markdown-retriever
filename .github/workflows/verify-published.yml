@@ -1,15 +1,15 @@
-# TEMPLATE (package-modernize). After the maintainer approves a staged version on npmjs.com, run this with the version: it
-# installs that version from the registry on Linux, Windows and macOS with every Node line, and under Bun and Deno, runs the
-# consumer fixtures against it, imports it in a fresh project outside the checkout, and verifies the registry signatures and the
-# provenance attestation. Replace {{PACKAGE}}, and the two {{SMOKE_*}} one-liners with a call whose answer the golden capture
-# recorded. For a package with a bin, get-title-at-url's verify-published.yml adds npx, bunx and `deno run npm:` steps.
+# After the maintainer approves a staged version on npmjs.com, run this with the version: it installs that version from the
+# registry on Linux, Windows and macOS with every Node line, and under Bun and Deno, runs the consumer fixtures against it
+# (requests go to the fixture server, never the real API), imports it in a fresh project outside the checkout, runs the bin
+# through npx, and verifies the registry signatures and the provenance attestation. The smoke checks use the golden
+# capture's offline answer: entityId 0 is refused with 1.1.7's "Need an entity id to read".
 name: verify-published
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: The published version to verify, for example {{NEW_VERSION}}
+        description: The published version to verify, for example 2.0.0
         required: true
         type: string
 
@@ -22,7 +22,7 @@ defaults:
 
 env:
   VERSION: ${{ inputs.version }}
-  CONSUMER_PACKAGE: "{{PACKAGE}}@${{ inputs.version }}"
+  CONSUMER_PACKAGE: "stack-exchange-markdown-retriever@${{ inputs.version }}"
 
 jobs:
   registry:
@@ -43,7 +43,7 @@ jobs:
           # The registry can take a few minutes to serve a version everywhere after approval.
           for attempt in $(seq 1 20); do
             if [ "$(npm view "$CONSUMER_PACKAGE" version 2>/dev/null)" = "$VERSION" ]; then
-              npm view {{PACKAGE}} dist-tags
+              npm view stack-exchange-markdown-retriever dist-tags
               exit 0
             fi
             echo "not on the registry yet (attempt $attempt of 20)"
@@ -90,8 +90,9 @@ jobs:
           cd "$project"
           npm init -y > /dev/null
           npm install --no-audit --no-fund "$CONSUMER_PACKAGE"
-          node -e "{{SMOKE_REQUIRE}}"
-          node --input-type=module -e "{{SMOKE_IMPORT}}"
+          node -e "const r = require('stack-exchange-markdown-retriever'); try { r.retrieveMarkdown({entityId: 0}, () => {}); process.exit(1); } catch (error) { if (error.message !== 'Need an entity id to read') process.exit(1); } console.log('require ok');"
+          node --input-type=module -e "import {retrieveMarkdown} from 'stack-exchange-markdown-retriever'; await retrieveMarkdown({entityId: 0}).then(() => process.exit(1), error => { if (error.message !== 'Need an entity id to read') process.exit(1); }); console.log('import ok');"
+          test "$(npx --yes -- stack-exchange-markdown-retriever --version)" = "$VERSION"
           npm audit signatures
 
   bun:
@@ -124,7 +125,7 @@ jobs:
           cd "$project"
           echo '{}' > package.json
           bun add "$CONSUMER_PACKAGE"
-          bun -e "{{SMOKE_IMPORT}}"
+          bun -e "import {retrieveMarkdown} from 'stack-exchange-markdown-retriever'; await retrieveMarkdown({entityId: 0}).then(() => process.exit(1), error => { if (error.message !== 'Need an entity id to read') process.exit(1); }); console.log('bun ok');"
 
   deno:
     name: deno
@@ -155,5 +156,5 @@ jobs:
       - name: deno imports the published package from npm
         working-directory: ${{ runner.temp }}
         run: |
-          printf '%s\n' "import lib from 'npm:$CONSUMER_PACKAGE';" "{{SMOKE_DENO}}" > check.mjs
+          printf '%s\n' "import lib from 'npm:$CONSUMER_PACKAGE';" "await lib.retrieveMarkdown({entityId: 0}).then(() => Deno.exit(1), error => { if (error.message !== 'Need an entity id to read') Deno.exit(1); }); console.log('deno ok');" > check.mjs
           deno run -A --minimum-dependency-age=0 check.mjs

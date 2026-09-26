@@ -1,6 +1,6 @@
 /*
 The package-shape suite. Every assertion here guards a promise the plan made: what ships, that the builds are portable, and
-that require() returns the function (plan D2) while import sees a default and a named export.
+that require() returns an object holding retrieveMarkdown, as 1.1.7's did (plan D2), while import sees a default and the named exports.
 */
 import assert from 'node:assert/strict';
 import {exec} from 'node:child_process';
@@ -56,7 +56,7 @@ test('package.json: entry points exist, no runtime dependencies, the Node floor'
   assert.equal(packageJson.main, './dist/index.cjs');
   assert.equal(packageJson.module, './dist/index.mjs');
   assert.equal(packageJson.types, './dist/index.d.cts');
-  assert.deepEqual(packageJson.bin, {'is-an-image-url': './dist/cli.mjs'});
+  assert.deepEqual(packageJson.bin, {'stack-exchange-markdown-retriever': './dist/cli.mjs'});
   for (const file of ['dist/index.mjs', 'dist/index.cjs', 'dist/index.d.mts', 'dist/index.d.cts', 'dist/cli.mjs']) {
     await access(new URL(`../../${file}`, import.meta.url));
   }
@@ -66,7 +66,7 @@ test('package.json: entry points exist, no runtime dependencies, the Node floor'
   assert.equal(packageJson.engines.node, '>=20');
   assert.equal(packageJson.sideEffects, false);
   // Trusted publishing matches this URL exactly.
-  assert.equal(packageJson.repository.url, 'git+https://github.com/m4bwav/is-an-image-url.git');
+  assert.equal(packageJson.repository.url, 'git+https://github.com/m4bwav/stack-exchange-markdown-retriever.git');
 });
 
 test('the builds use nothing Node-specific or browser-specific, so they run in browsers, Deno, Bun and workers', async () => {
@@ -81,18 +81,22 @@ test('the builds use nothing Node-specific or browser-specific, so they run in b
   }
 });
 
-test('the CommonJS build runs in a bare ECMAScript context given only fetch, URL, AbortController and timers', async () => {
+test('the CommonJS build runs in a bare ECMAScript context given only the web platform globals it names', async () => {
   const requested = [];
   const fakeFetch = async url => {
     requested.push(url);
-    return new Response(null, {status: 200, headers: {'content-type': 'image/png'}});
+    return Response.json({items: [{body_markdown: 'hello'}]}, {status: 200});
   };
 
   const context = vm.createContext({
     module: {exports: {}},
     fetch: fakeFetch,
-    URL,
     AbortController,
+    Blob,
+    DecompressionStream,
+    DOMException,
+    Response,
+    TextDecoder,
     setTimeout,
     clearTimeout,
     queueMicrotask,
@@ -100,14 +104,15 @@ test('the CommonJS build runs in a bare ECMAScript context given only fetch, URL
   context.exports = context.module.exports;
   vm.runInContext(await read('dist/index.cjs'), context);
   const library = context.module.exports;
-  assert.equal(typeof library, 'function');
-  assert.equal(library.default, library);
-  assert.equal(await library('photo.png'), true);
-  assert.equal(await library('https://example.invalid/cat'), true);
-  assert.deepEqual(requested, ['https://example.invalid/cat']);
-  assert.equal(await new Promise(resolve => {
-    library('notes.txt', resolve);
-  }), false);
+  assert.equal(typeof library.retrieveMarkdown, 'function');
+  assert.equal(library.default.retrieveMarkdown, library.retrieveMarkdown);
+  assert.equal(await library.retrieveMarkdown({entityId: 1}), 'hello');
+  assert.deepEqual(requested, ['https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow']);
+  assert.deepEqual(await new Promise(resolve => {
+    library.retrieveMarkdown({entityId: 2, isForAnswer: true}, (...arguments_) => {
+      resolve(arguments_);
+    });
+  }), ['hello', null]);
 });
 
 test('the declaration files need no Node types', async () => {
@@ -118,18 +123,12 @@ test('the declaration files need no Node types', async () => {
   }
 });
 
-test('the declaration files describe the two shapes: default and named in ESM, the callable `export =` in CommonJS', async () => {
+test('the declaration files describe both call forms and the exports', async () => {
   const [esm, cjs] = await Promise.all([read('dist/index.d.mts'), read('dist/index.d.cts')]);
-  for (const signature of [
-    'function isAnImageUrl(url: string | null | undefined, callback: IsAnImageUrlCallback, timeout?: number): void;',
-    'function isAnImageUrl(url: string | null | undefined, options?: IsAnImageUrlOptions): Promise<boolean>;',
-  ]) {
-    assert.ok(esm.includes(`declare ${signature}`), esm);
-    assert.ok(cjs.includes(`declare ${signature}`), cjs);
+  for (const types of [esm, cjs]) {
+    assert.ok(types.includes('export declare function retrieveMarkdown(options: RetrieveMarkdownOptions, callback: RetrieveMarkdownCallback): void;'), types);
+    assert.ok(types.includes('export declare function retrieveMarkdown(options: RetrieveMarkdownOptions): Promise<string | null>;'), types);
+    assert.match(types, /export declare class StackExchangeError extends Error/u);
+    assert.match(types, /stackExchangeMarkdownRetriever as default/u);
   }
-
-  assert.match(esm, /export \{ .*isAnImageUrl as default.* \};/u);
-  assert.match(esm, /IsAnImageUrlOptions/u);
-  assert.match(cjs, /\nexport = callable;/u);
-  assert.doesNotMatch(cjs, /\nexport (?:\{|default|declare)/u, 'the CommonJS declaration has no ESM-style exports');
 });

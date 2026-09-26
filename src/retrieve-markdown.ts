@@ -69,7 +69,8 @@ function prepare(options: RetrieveMarkdownOptions): Request {
     id = id.valueOf();
   }
 
-  if ((typeof id !== 'number' && typeof id !== 'string') || !ID.test(String(id))) {
+  const path = typeof id === 'number' ? String(id) : id;
+  if (typeof path !== 'string' || !ID.test(path)) {
     throw new TypeError(`entityId must be a post id (digits, or ids joined by ";"), not ${describe(options.entityId)}`);
   }
 
@@ -87,14 +88,14 @@ function prepare(options: RetrieveMarkdownOptions): Request {
     throw new TypeError('signal must be an AbortSignal');
   }
 
-  const pairs: Array<[string, unknown]> = [['order', 'asc'], ['filter', FILTER]];
-  if (options.apiKey) {
-    pairs.push(['key', options.apiKey]);
-  }
-
-  pairs.push(['site', options.site ? options.site : 'stackoverflow']);
+  const pairs: Array<[string, unknown]> = [
+    ['order', 'asc'],
+    ['filter', FILTER],
+    ...(options.apiKey ? [['key', options.apiKey] as [string, unknown]] : []),
+    ['site', options.site || 'stackoverflow'],
+  ];
   const kind = options.isForAnswer ? 'answers' : 'questions';
-  return {url: `${API}/2.2/${kind}/${String(id)}?${stringifyQuery(pairs)}`, timeout, signal};
+  return {url: `${API}/2.2/${kind}/${path}?${stringifyQuery(pairs)}`, timeout, signal};
 }
 
 async function inflate(bytes: Uint8Array, format: 'gzip' | 'deflate'): Promise<Uint8Array> {
@@ -102,14 +103,15 @@ async function inflate(bytes: Uint8Array, format: 'gzip' | 'deflate'): Promise<U
   return new Uint8Array(await new Response(stream).arrayBuffer());
 }
 
-// fetch undoes a Content-Encoding itself. 1.1.7 ran every body through zlib.unzip, which also read gzip and zlib data sent
+// The platform's fetch undoes a Content-Encoding itself. 1.1.7 ran every body through zlib.unzip, which also read gzip and zlib data sent
 // without the header; that is kept by looking at the first bytes.
 async function decode(bytes: Uint8Array, status: number): Promise<string> {
   const [first = 0, second = 0] = bytes;
   let format: 'gzip' | 'deflate' | undefined;
   if (first === 0x1F && second === 0x8B) {
     format = 'gzip';
-  } else if ((first & 0x0F) === 8 && ((first * 256) + second) % 31 === 0) {
+  } else if (first % 16 === 8 && ((first * 256) + second) % 31 === 0) {
+    // A zlib header: compression method 8 in the low four bits of the first byte, and the two bytes a multiple of 31.
     format = 'deflate';
   }
 
@@ -123,6 +125,7 @@ async function decode(bytes: Uint8Array, status: number): Promise<string> {
   }
 
   // ignoreBOM: a byte order mark stays in the text, so JSON.parse refuses it as 1.1.7's Buffer.toString did.
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- TextDecoder's own option name.
   return new TextDecoder('utf-8', {ignoreBOM: true}).decode(text);
 }
 
@@ -166,9 +169,8 @@ async function perform(request: Request): Promise<unknown> {
       throw new StackExchangeError('The response is not JSON', {status: response.status, cause: error});
     }
 
-    // 1.1.7's expression, kept as it was: a missing body_markdown is undefined, a non-string one is passed on.
-    const markdown = results?.items?.[0] ? results.items[0].body_markdown : null;
     if (results?.error_message) {
+      // As 1.1.7's new Error(error_message) did, a message that is not a string is converted.
       throw new StackExchangeError(String(results.error_message), {
         status: response.status,
         errorId: results.error_id,
@@ -176,7 +178,8 @@ async function perform(request: Request): Promise<unknown> {
       });
     }
 
-    return markdown;
+    // 1.1.7's expression, kept as it was: a missing body_markdown is undefined, a non-string one is passed on.
+    return results?.items?.[0] ? results.items[0].body_markdown : null;
   } finally {
     clearTimeout(timer);
     signal?.removeEventListener('abort', onAbort);
@@ -202,27 +205,29 @@ export function retrieveMarkdown(options: RetrieveMarkdownOptions, callback?: Re
       const request = prepare(options);
       return perform(request).then(markdown => (typeof markdown === 'string' ? markdown : null));
     } catch (error) {
-      return Promise.reject(error as Error);
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- prepare() throws only Error objects.
+      return Promise.reject(error);
     }
   }
 
-  const request = prepare(options);
   if (typeof callback !== 'function') {
+    // Checked after the options, as 1.1.7 threw its "Need an entity id" first.
+    prepare(options);
     throw new TypeError(`callback must be a function, not ${describe(callback)}`);
   }
 
-  // The callback runs outside the promise chain, so an exception it throws is an uncaught exception (as in 1.1.7) and it is
-  // never called a second time with its own error (1.1.7 did that).
-  perform(request).then(
-    markdown => {
+  const request = prepare(options);
+  // The callback runs outside the promise chain, in a microtask of its own, so an exception it throws is an uncaught
+  // exception (as in 1.1.7) and never reaches the catch below: it is not called a second time with its own error, as 1.1.7 did.
+  perform(request)
+    .then(markdown => {
       queueMicrotask(() => {
         callback(markdown as string | null, null);
       });
-    },
-    (error: unknown) => {
+    })
+    .catch((error: unknown) => {
       queueMicrotask(() => {
         callback(null, error as Error);
       });
-    },
-  );
+    });
 }

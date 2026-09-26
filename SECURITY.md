@@ -8,8 +8,8 @@ A confirmed problem is fixed in a new release, and the advisory is published onc
 
 ## Supported versions
 
-Only the latest major version ({{MAJOR}}.x) gets security fixes.
+Only the latest major version (2.x) gets security fixes.
 
 ## What this package is not
 
-{{TEMPLATE: one paragraph on the package's limits that a reader could mistake for a vulnerability, for example "not a cryptographic random number generator", "does not sanitize HTML", "fetches whatever URL it is given, so callers must guard against server-side request forgery". Delete the section if there is nothing to say.}}
+It fetches public posts from the Stack Exchange API and returns their markdown as the API gives it: it does not render, sanitise or escape that markdown (which can hold HTML and HTML entities), so treat it as untrusted text. The API key you pass is sent in the query string of an HTTPS request to api.stackexchange.com, as the API requires; the package never puts it in an error message.

@@ -82,7 +82,7 @@ async function main(argv: string[]): Promise<number> {
       apiKey: values.apiKey,
       timeout,
     });
-    // console.log, as 1.1.7 printed its answer: `null` when there is no such post.
+    // Printed with console.log, as 1.1.7 printed its answer: `null` when there is no such post.
     console.log(markdown);
     return 0;
   } catch (error) {

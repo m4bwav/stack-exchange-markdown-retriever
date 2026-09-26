@@ -105,15 +105,6 @@ const exceptionFor = entry => {
   return undefined;
 };
 
-test('every exception names a captured case', () => {
-  const names = new Set(golden.cases.map(entry => entry.name));
-  for (const exception of EXCEPTIONS) {
-    for (const name of Object.keys(exception.cases)) {
-      assert.ok(names.has(name), `${exception.name}: no captured case "${name}"`);
-    }
-  }
-});
-
 const summariseBody = text => (typeof text === 'string' && text.length > 2000 ? {$long: text.length, start: text.slice(0, 80), end: text.slice(-80)} : text);
 const describeError = error => (error instanceof Error ? {$error: error.name, message: error.message} : error);
 
@@ -122,11 +113,15 @@ const oldRequestLines = entry => entry.requests.filter(request => request.method
 
 function assertError(actual, expected, label) {
   // 1.1.7's error from the API's error_message was a plain Error with that message; 2.0.0 keeps the message on a StackExchangeError.
-  assert.ok(actual && typeof actual === 'object' && typeof actual.$error === 'string', `${label}: an error`);
-  if (expected.$error === 'Error' && expected.code === undefined) {
-    assert.equal(actual.$error, 'StackExchangeError', label);
-    assert.equal(actual.message, expected.message, label);
+  assert.equal(typeof actual, 'object', `${label}: an error`);
+  assert.notEqual(actual, null, `${label}: an error`);
+  assert.equal(typeof actual.$error, 'string', `${label}: an error`);
+  if (!(expected.$error === 'Error' && expected.code === undefined)) {
+    return;
   }
+
+  assert.equal(actual.$error, 'StackExchangeError', label);
+  assert.equal(actual.message, expected.message, label);
 }
 
 function assertCalls(actual, expected, label) {
@@ -164,11 +159,11 @@ const decodeArguments = entry => decode(entry.args);
 
 async function runCallbackCase(lib, entry, change) {
   const record = {calls: [], threw: undefined};
-  let returnedYet = false;
-  let recording = true;
+  let isReturnedYet = false;
+  let isRecording = true;
   const callback = (markdown, error) => {
-    if (recording) {
-      record.calls.push({sync: !returnedYet, value: [summariseBody(markdown), describeError(error)]});
+    if (isRecording) {
+      record.calls.push({sync: !isReturnedYet, value: [summariseBody(markdown), describeError(error)]});
     }
   };
 
@@ -178,7 +173,7 @@ async function runCallbackCase(lib, entry, change) {
   // to the shared server was closed under it ("other side closed") a second later instead of hanging.
   const target = hangs ? await fixtures.start() : server;
   api.server = target;
-  const before = target.requests.length;
+  const seen = target.requests.length;
   const started = Date.now();
   try {
     lib.retrieveMarkdown(...args);
@@ -186,22 +181,22 @@ async function runCallbackCase(lib, entry, change) {
     record.threw = error;
   }
 
-  returnedYet = true;
+  isReturnedYet = true;
   const maxWait = hangs ? 3000 : MAX_WAIT_MS;
   while (record.calls.length === 0 && !record.threw && Date.now() - started < maxWait) {
     await sleep(10);
   }
 
   await sleep(SETTLE_MS);
-  recording = false;
-  const requests = target.requests.slice(before).map(request => `${request.method} ${request.path}`);
+  isRecording = false;
+  const requests = target.requests.slice(seen).map(request => `${request.method} ${request.path}`);
   api.server = server;
   if (hangs) {
     await target.close();
   }
 
   server.dropConnections();
-  // fetch can otherwise send the next case's request on a pooled socket that was just destroyed.
+  // Fetch can otherwise send the next case's request on a pooled socket that was just destroyed.
   await sleep(30);
   return {record, requests, change};
 }
@@ -239,21 +234,21 @@ for (const {name: buildName, lib} of builds) {
           }
 
           if (change?.rejects) {
-            const before = server.requests.length;
+            const seen = server.requests.length;
             const returned = lib.retrieveMarkdown(...decodeArguments(entry));
             assert.ok(returned instanceof Promise, 'returns a Promise');
             await assert.rejects(returned, {name: change.rejects, message: entry.threw.$throws});
-            assert.deepEqual(server.requests.slice(before), []);
+            assert.deepEqual(server.requests.slice(seen), []);
             return;
           }
 
           if (change?.promise !== undefined) {
-            const before = server.requests.length;
+            const seen = server.requests.length;
             const [options] = decodeArguments(entry);
             const returned = lib.retrieveMarkdown(options, ...decodeArguments(entry).slice(1));
             assert.ok(returned instanceof Promise, 'returns a Promise');
             assert.equal(await returned, change.promise);
-            assert.deepEqual(server.requests.slice(before).map(request => `${request.method} ${request.path}`), oldRequestLines(entry));
+            assert.deepEqual(server.requests.slice(seen).map(request => `${request.method} ${request.path}`), oldRequestLines(entry));
             return;
           }
 
@@ -299,7 +294,7 @@ for (const {name: buildName, lib} of builds) {
         try {
           const [options] = decodeArguments(entry);
           const [markdown, error] = entry.calls[0].args.map(value => (value && value.$error ? value : decode(value)));
-          const before = server.requests.length;
+          const seen = server.requests.length;
           if (error) {
             await assert.rejects(lib.retrieveMarkdown(options), rejection => {
               assertError(describeError(rejection), error, entry.name);
@@ -312,7 +307,7 @@ for (const {name: buildName, lib} of builds) {
             assert.deepEqual(summariseBody(resolved), expected);
           }
 
-          assert.deepEqual(server.requests.slice(before).map(request => `${request.method} ${request.path}`), oldRequestLines(entry));
+          assert.deepEqual(server.requests.slice(seen).map(request => `${request.method} ${request.path}`), oldRequestLines(entry));
         } finally {
           api.mode = 'tunnel';
           server.dropConnections();
@@ -326,4 +321,13 @@ for (const {name: buildName, lib} of builds) {
 test('the golden file is the published 1.1.7 and the codec round-trips it', () => {
   assert.equal(golden.package, 'stack-exchange-markdown-retriever@1.1.7');
   assert.deepEqual(encode(decode(golden.cases[0].args)), golden.cases[0].args);
+});
+
+test('every exception names a captured case', () => {
+  const names = new Set(golden.cases.map(entry => entry.name));
+  for (const exception of EXCEPTIONS) {
+    for (const name of Object.keys(exception.cases)) {
+      assert.ok(names.has(name), `${exception.name}: no captured case "${name}"`);
+    }
+  }
 });

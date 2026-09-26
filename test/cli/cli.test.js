@@ -30,12 +30,14 @@ after(async () => {
 });
 
 function run(arguments_, mode = 'tunnel') {
-  const before = server.requests.length;
+  const seen = server.requests.length;
   return new Promise(resolve => {
     execFile(process.execPath, ['--import', preload, cli, ...arguments_], {encoding: 'utf8', env: {...process.env, FIXTURE_BASE: server.base, FIXTURE_MODE: mode}}, (error, stdout, stderr) => {
-      const requests = server.requests.slice(before).map(request => `${request.method} ${request.path}`);
+      const requests = server.requests.slice(seen).map(request => `${request.method} ${request.path}`);
       server.dropConnections();
-      resolve({code: error ? error.code : 0, stdout: stdout.replaceAll('\r\n', '\n'), stderr: stderr.replaceAll('\r\n', '\n'), requests});
+      resolve({
+        code: error ? error.code : 0, stdout: stdout.replaceAll('\r\n', '\n'), stderr: stderr.replaceAll('\r\n', '\n'), requests,
+      });
     });
   });
 }
@@ -52,17 +54,27 @@ const EXCEPTIONS = {
   // Added: --version (1.1.7: "error: unknown option").
   '--version': {code: 0, stdout: `${version}\n`, stderr: ''},
   // Fixed: -a/--answer fetches the answer (1.1.7 ignored the flag and fetched the question).
-  '-a answer id (the flag is ignored: fetches a question)': {code: 0, stdout: ANSWER, stderr: '', requests: [`GET /2.2/answers/1010?${FILTER}&site=stackoverflow`]},
-  '--answer answer id': {code: 0, stdout: ANSWER, stderr: '', requests: [`GET /2.2/answers/1010?${FILTER}&site=stackoverflow`]},
+  '-a answer id (the flag is ignored: fetches a question)': {
+    code: 0, stdout: ANSWER, stderr: '', requests: [`GET /2.2/answers/1010?${FILTER}&site=stackoverflow`],
+  },
+  '--answer answer id': {
+    code: 0, stdout: ANSWER, stderr: '', requests: [`GET /2.2/answers/1010?${FILTER}&site=stackoverflow`],
+  },
   // Changed: errors go to stderr with exit 1 (1.1.7 printed null and exited 0).
   'API error 400': {code: 1, stdout: '', stderr: 'StackExchangeError: ids\n'},
-  'proxy refuses the tunnel': {code: 1, stdout: '', stderr: 'TypeError: fetch failed\n', requests: []},
+  'proxy refuses the tunnel': {
+    code: 1, stdout: '', stderr: 'TypeError: fetch failed\n', requests: [],
+  },
   // Fixed: a plain-JSON body is read (1.1.7: a TypeError reading toString, printed as null).
   'plain JSON body (zlib error)': {code: 0, stdout: 'plain\n', stderr: ''},
   // Security: an id that is not a post id is refused before any request (1.1.7 requested /2.2/questions/abc).
-  'letters as the id': {code: 1, stdout: '', stderr: /^TypeError: entityId must be a post id/u, requests: []},
+  'letters as the id': {
+    code: 1, stdout: '', stderr: /^TypeError: entityId must be a post id/u, requests: [],
+  },
   // Changed: parseArgs words the error its own way (same exit status as commander's).
-  'an unknown flag': {code: 1, stdout: '', stderr: /^error: Unknown option '--foo'/u, requests: []},
+  'an unknown flag': {
+    code: 1, stdout: '', stderr: /^error: Unknown option '--foo'/u, requests: [],
+  },
 };
 
 for (const entry of golden.cli) {
@@ -114,7 +126,7 @@ test('--timeout bounds the wait and a bad --timeout is refused', async () => {
   assert.match(slow.stderr, /^TimeoutError: /u);
   assert.ok(Date.now() - started < 5000);
   for (const bad of ['-1', 'soon', '']) {
-    const refused = await run(['--timeout', bad, '1']);
+    const refused = await run([`--timeout=${bad}`, '1']);
     assert.equal(refused.code, 1, bad);
     assert.match(refused.stderr, /^error: --timeout takes a number of milliseconds/u, bad);
     assert.deepEqual(refused.requests, [], bad);
@@ -125,7 +137,7 @@ test('errors never print a stack trace or the API key', async () => {
   for (const arguments_ of [['-k', 'SECRETKEY', '9001'], ['-k', 'SECRETKEY', '9007'], ['-k', 'SECRETKEY', 'abc']]) {
     const result = await run(arguments_);
     assert.equal(result.code, 1, arguments_.join(' '));
-    assert.doesNotMatch(result.stderr, /\n\s+at /u);
+    assert.ok(!result.stderr.includes('    at '), 'no stack trace');
     assert.doesNotMatch(result.stderr, /SECRETKEY/u);
   }
 });
