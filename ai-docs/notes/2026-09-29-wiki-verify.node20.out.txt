@@ -1,0 +1,1078 @@
+## installed
+stack-exchange-markdown-retriever@2.0.0 on Node v20.20.2
+
+## esm exports
+[
+  "StackExchangeError",
+  "default",
+  "retrieveMarkdown"
+]
+
+## cjs exports
+[
+  "StackExchangeError",
+  "default",
+  "retrieveMarkdown"
+]
+
+## default export keys (esm)
+[
+  "StackExchangeError",
+  "retrieveMarkdown"
+]
+
+## api: retrieveMarkdown.length
+2
+
+## api: the same function in both builds
+esm.retrieveMarkdown === esm.default.retrieveMarkdown: true
+cjs.retrieveMarkdown === esm.retrieveMarkdown: false
+
+## package.json engines, bin, exports
+{
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "stack-exchange-markdown-retriever": "./dist/cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": "none"
+}
+
+## guard
+guard refused 4 of 4 requests to .invalid hosts (fetch and node:http, http and https)
+
+## guard: .invalid hosts with the guard alone
+http://guard-test.invalid/ fetch: wiki-verify guard: refused a connection to guard-test.invalid:80
+http://guard-test.invalid/ http: wiki-verify guard: refused a connection to guard-test.invalid:80
+https://guard-test.invalid/ fetch: wiki-verify guard: refused a connection to guard-test.invalid:443
+https://guard-test.invalid/ http: wiki-verify guard: refused a connection to guard-test.invalid:443
+
+## lookups reach the fixture through
+undici EnvHttpProxyAgent preloaded
+
+## home: the ESM example (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+
+## home: the request it made
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi
+
+## getting-started: CommonJS with a callback (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+
+## getting-started: default export (sample content)
+Sample Stack Overflow question, made up for this wiki.
+
+## getting-started: tsc on types.mts
+types.mts(4,13): error TS18047: 'markdown' is possibly 'null'.
+exit 2
+
+## getting-started: typescript version
+Version 6.0.3
+
+## getting-started: pnpm add
+exit 0; pnpm 10.34.5
+
+## getting-started: pnpm, node example.mjs (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+
+## getting-started: yarn add
+exit 0; yarn 4.18.1; node_modules: no
+
+## getting-started: yarn 4, node example.mjs
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'stack-exchange-markdown-retriever' imported from <project>/example.mjs
+exit 1
+
+## getting-started: yarn node, probe
+204
+
+## getting-started: yarn 4, yarn node example.mjs (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+
+## getting-started: bun add
+exit 0; bun 1.4.2
+
+## getting-started: bun, probe
+204
+
+## getting-started: bun example.mjs (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+
+## getting-started: bun, the request it made
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi
+
+## getting-started: deno version
+deno 2.9.6 (stable, release, x86_64-pc-windows-msvc)
+
+## getting-started: deno, resolve the package (no request)
+function
+
+## getting-started: deno, probe
+204
+
+## getting-started: deno run --allow-net (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+
+## getting-started: deno, the request it made
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi
+
+## getting-started: deno run without --allow-net
+--- stderr
+error: Uncaught (in promise) NotCapable: Requires net access to "api.stackexchange.com:443", run again with the --allow-net flag
+    at mainFetch (ext:deno_fetch/26_fetch.js:2:2193)
+    at ext:deno_fetch/26_fetch.js:2:6939
+    at new Promise (<anonymous>)
+    at Object.fetch (ext:deno_fetch/26_fetch.js:2:6346)
+    at fetch (ext:runtime/98_global_scope_shared.js:1:7740)
+    at perform (file:///<scratch>/node_modules/stack-exchange-markdown-retriever/dist/index.mjs:210:28)
+    at retrieveMarkdown (file:///<scratch>/node_modules/stack-exchange-markdown-retriever/dist/index.mjs:259:14)
+    at file:///<scratch>/deno-example.mjs:3:24
+exit 1
+
+## getting-started: npx, first run
+2.0.0
+
+## getting-started: npx -s scifi 127968 (sample content)
+$ npx stack-exchange-markdown-retriever@2.0.0 -s scifi 127968
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+$ echo $?
+0
+
+## getting-started: npx -a 1010 (sample content)
+$ npx stack-exchange-markdown-retriever@2.0.0 -a 1010
+Sample answer, made up for this wiki, with a [link](https://example.com/).
+$ echo $?
+0
+
+## getting-started: npx 11227809 (sample content)
+$ npx stack-exchange-markdown-retriever@2.0.0 11227809
+Sample Stack Overflow question, made up for this wiki.
+$ echo $?
+0
+
+## api: StackExchangeError from an API error (fixture error body)
+{
+  "name": "StackExchangeError",
+  "message": "ids",
+  "status": 400,
+  "errorId": 400,
+  "errorName": "bad_parameter",
+  "instanceofStackExchangeError": true,
+  "instanceofError": true,
+  "cause": "<undefined>"
+}
+
+## api: StackExchangeError for an HTML page, with its cause
+{
+  "name": "StackExchangeError",
+  "message": "The response is not JSON",
+  "status": 500,
+  "errorId": "<undefined>",
+  "errorName": "<undefined>",
+  "cause": "SyntaxError: Unexpected token '<', \"<html><bod\"... is not valid JSON"
+}
+
+## api: new StackExchangeError
+StackExchangeError Something failed 503 undefined
+
+## api: callback null returns a Promise
+true Sample question one.
+
+## api: the callback form returns undefined
+undefined
+
+## api: no options, callback form
+TypeError: Cannot read properties of undefined (reading 'entityId')
+
+## api: no options, callback form: requests
+(none)
+
+## api: no entityId, callback form
+Error: Need an entity id to read
+
+## api: no entityId, callback form: requests
+(none)
+
+## api: callback a string
+TypeError: callback must be a function, not "callback"
+
+## api: callback a string: requests
+(none)
+
+## api: timeout a string
+TypeError: timeout must be a number of milliseconds, 0 or more, not "5000"
+
+## api: timeout a string: requests
+(none)
+
+## api: timeout negative
+TypeError: timeout must be a number of milliseconds, 0 or more, not -1
+
+## api: timeout negative: requests
+(none)
+
+## api: signal not a signal
+TypeError: signal must be an AbortSignal
+
+## api: signal not a signal: requests
+(none)
+
+## api: entityId letters
+TypeError: entityId must be a post id (digits, or ids joined by ";"), not "abc"
+
+## api: entityId letters: requests
+(none)
+
+## api: entityId an array
+TypeError: entityId must be a post id (digits, or ids joined by ";"), not an array
+
+## api: entityId an array: requests
+(none)
+
+## api: entityId negative
+TypeError: entityId must be a post id (digits, or ids joined by ";"), not -1
+
+## api: entityId negative: requests
+(none)
+
+## api: no options, Promise form rejects
+rejected: TypeError: Cannot read properties of undefined (reading 'entityId')
+
+## api: no entityId, Promise form rejects
+rejected: Error: Need an entity id to read
+
+## behaviour: question, default site
+GET https://api.stackexchange.com/2.2/questions/11227809?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+=> "Sample Stack Overflow question, made up for this wiki."
+
+## behaviour: question, short site name
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi
+=> "Sample question body, made up for this wiki (not the real post).\n\nIt keeps HTML entities: &quot;quoted&quot; &amp; more.\n\n    an indented code line"
+
+## behaviour: question, site as a domain
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi.stackexchange.com
+=> "Sample question body, made up for this wiki (not the real post).\n\nIt keeps HTML entities: &quot;quoted&quot; &amp; more.\n\n    an indented code line"
+
+## behaviour: answer
+GET https://api.stackexchange.com/2.2/answers/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+=> "Sample answer, made up for this wiki, with a [link](https://example.com/)."
+
+## behaviour: ids joined by a semicolon
+GET https://api.stackexchange.com/2.2/questions/2;1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+=> "Sample question two."
+
+## behaviour: id as a string with a leading zero
+GET https://api.stackexchange.com/2.2/questions/011227809?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+=> null
+
+## behaviour: apiKey
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&key=abc123&site=stackoverflow
+=> "Sample question one."
+
+## behaviour: apiKey with characters to escape
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&key=k%3Dy%26z%20w%2F%2B&site=stackoverflow
+=> "Sample question one."
+
+## behaviour: apiKey empty (left out)
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+=> "Sample question one."
+
+## behaviour: site empty (the default)
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+=> "Sample question one."
+
+## behaviour: site with an apostrophe
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=it%27s
+=> null
+
+## behaviour: site a number
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=123
+=> null
+
+## behaviour: site an object
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=
+=> null
+
+## behaviour: 2 ** 53 as the id
+GET https://api.stackexchange.com/2.2/questions/9007199254740992?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+=> null
+
+## behaviour: the timing program (sample content)
+retrieveMarkdown returned
+callback: Sample question one. null
+
+## behaviour: callback runs after the call returns
+retrieveMarkdown returned
+callback: Sample question one. null
+
+## edge: no such post
+callback: (null, null)
+promise: resolves null
+requests: 2
+
+## edge: a post without body_markdown
+callback: ("<undefined>", null)
+promise: resolves null
+requests: 2
+
+## edge: an empty body_markdown
+callback: ("", null)
+promise: resolves ""
+requests: 2
+
+## edge: body_markdown a number
+callback: (42, null)
+promise: resolves null
+requests: 2
+
+## edge: the JSON literal null
+callback: (null, null)
+promise: resolves null
+requests: 2
+
+## edge: an error body without error_message, status 404
+callback: (null, null)
+promise: resolves null
+requests: 2
+
+## edge: plain JSON, no Content-Encoding
+callback: ("Sample plain JSON body.", null)
+promise: resolves "Sample plain JSON body."
+requests: 2
+
+## edge: deflate with its header
+callback: ("Sample deflate body.", null)
+promise: resolves "Sample deflate body."
+requests: 2
+
+## edge: gzip bytes without a Content-Encoding header
+callback: ("Sample gzip body without the header.", null)
+promise: resolves "Sample gzip body without the header."
+requests: 2
+
+## edge: a 302 redirect to question 1
+callback: ("Sample question one.", null)
+promise: resolves "Sample question one."
+requests: 4
+
+## edge: error_message beside items, status 200
+callback: (null, StackExchangeError: odd)
+promise: rejects StackExchangeError: odd status 200
+requests: 2
+
+## edge: API error 400
+callback: (null, StackExchangeError: ids)
+promise: rejects StackExchangeError: ids status 400
+requests: 2
+
+## edge: throttled, 502
+callback: (null, StackExchangeError: too many requests from this IP, more requests available in 3600 seconds)
+promise: rejects StackExchangeError: too many requests from this IP, more requests available in 3600 seconds status 502
+requests: 2
+
+## edge: HTML error page, 500
+callback: (null, StackExchangeError: The response is not JSON)
+promise: rejects StackExchangeError: The response is not JSON (cause: SyntaxError: Unexpected token '<', "<html><bod"... is not valid JSON) status 500
+requests: 2
+
+## edge: cut-off gzip
+callback: (null, StackExchangeError: The response is not JSON)
+promise: rejects StackExchangeError: The response is not JSON (cause: SyntaxError: Unexpected end of JSON input) status 200
+requests: 2
+
+## edge: 204 No Content
+callback: (null, StackExchangeError: The response is not JSON)
+promise: rejects StackExchangeError: The response is not JSON (cause: SyntaxError: Unexpected end of JSON input) status 204
+requests: 2
+
+## edge: decompresses past 64 MiB (no Content-Encoding)
+callback: (null, StackExchangeError: The decompressed response is larger than 67108864 bytes)
+promise: rejects StackExchangeError: The decompressed response is larger than 67108864 bytes status 200
+requests: 2
+
+## edge: decompresses past 64 MiB (Content-Encoding: gzip)
+callback: (null, StackExchangeError: The response is not JSON)
+promise: rejects StackExchangeError: The response is not JSON (cause: SyntaxError: Unexpected token '<NUL>', "<NUL><NUL><NUL><NUL><NUL><NUL><NUL><NUL><NUL><NUL>"... is not valid JSON) status 200
+requests: 2
+
+## edge: connection dropped
+callback: (null, TypeError: fetch failed)
+promise: rejects TypeError: fetch failed (cause: SocketError: other side closed)
+requests: 2
+
+## edge: 65 MiB of valid JSON with Content-Encoding: gzip (the cap does not apply)
+resolves a string of 68157440 characters
+
+## api: instanceof across the two builds
+error from the CommonJS build: instanceof cjs.StackExchangeError true, instanceof esm.StackExchangeError false, name StackExchangeError
+
+## edge: a proxy that hangs up on every CONNECT, timeout 2000 (undici EnvHttpProxyAgent)
+TimeoutError: The operation timed out.
+CONNECTs to api.stackexchange.com:443: more than 100
+
+## edge: timeout 300 on a server that never answers
+TimeoutError: The operation timed out. (instanceof DOMException: true; after 300 ms or more)
+
+## edge: an AbortSignal aborted during the request
+AbortError: This operation was aborted
+
+## edge: an AbortSignal aborted with a reason
+Error: stopped by the caller
+
+## edge: a signal aborted before the call
+AbortError: This operation was aborted; requests: 0
+
+## recipes: AbortSignal.timeout
+TimeoutError: The operation was aborted due to timeout
+
+## edge: timeout larger than setTimeout allows
+Sample question one.
+
+## edge: timeout Infinity
+Sample question one.
+
+## edge: entityId 0
+rejects Error: Need an entity id to read; requests 0
+
+## edge: entityId empty string
+rejects Error: Need an entity id to read; requests 0
+
+## edge: entityId NaN
+rejects Error: Need an entity id to read; requests 0
+
+## edge: entityId false
+rejects Error: Need an entity id to read; requests 0
+
+## edge: entityId string "0"
+resolves null; request GET https://api.stackexchange.com/2.2/questions/0?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+
+## edge: entityId 1.5
+rejects TypeError: entityId must be a post id (digits, or ids joined by ";"), not 1.5; requests 0
+
+## edge: entityId "../x"
+rejects TypeError: entityId must be a post id (digits, or ids joined by ";"), not "../x"; requests 0
+
+## edge: entityId " 1 "
+rejects TypeError: entityId must be a post id (digits, or ids joined by ";"), not " 1 "; requests 0
+
+## edge: entityId 1e21
+rejects TypeError: entityId must be a post id (digits, or ids joined by ";"), not 1e+21; requests 0
+
+## edge: entityId a Number object
+resolves "Sample question one."; request GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+
+## edge: entityId "1;;2"
+rejects TypeError: entityId must be a post id (digits, or ids joined by ";"), not "1;;2"; requests 0
+
+## edge: a callback that throws (sample content)
+call 1 Sample question one.
+stderr: Error: thrown by the callback
+exit 1
+
+## commands: --help
+$ stack-exchange-markdown-retriever --help
+
+  Print the markdown source of a question or an answer on a Stack Exchange site.
+
+  Usage
+    $ stack-exchange-markdown-retriever [-a] [-s <site>] [-k <key>] [--timeout <ms>] <id>
+
+  Options
+    -a, --answer         The id is an answer's, not a question's
+    -s, --site <site>    The site: a short name (scifi) or a domain
+                         (scifi.stackexchange.com); default stackoverflow
+    -k, --apiKey <key>   An API key, which raises the daily request quota
+    --timeout <ms>       Give up after this many milliseconds (default 30000)
+    -h, --help           Show this help
+    -v, --version        Show the version
+
+  Prints null when there is no such post. On Node, a proxy in HTTPS_PROXY is
+  used only when NODE_USE_ENV_PROXY=1 is set.
+
+  Exit codes
+    0  the markdown (or null) was printed
+    1  an error: bad arguments, the API's error, or the network's
+
+  Example
+    $ stack-exchange-markdown-retriever -s scifi.stackexchange.com 127968
+
+$ echo $?
+0
+
+## commands: --version
+$ stack-exchange-markdown-retriever --version
+2.0.0
+$ echo $?
+0
+
+## commands: -v
+$ stack-exchange-markdown-retriever -v
+2.0.0
+$ echo $?
+0
+
+## commands: -s scifi 127968 (sample content)
+$ stack-exchange-markdown-retriever -s scifi 127968
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+$ echo $?
+0
+
+## commands: request for -s scifi 127968
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi
+
+## commands: -s scifi.stackexchange.com 127968 (sample content)
+$ stack-exchange-markdown-retriever -s scifi.stackexchange.com 127968
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: &quot;quoted&quot; &amp; more.
+
+    an indented code line
+$ echo $?
+0
+
+## commands: -a 1010 (sample content)
+$ stack-exchange-markdown-retriever -a 1010
+Sample answer, made up for this wiki, with a [link](https://example.com/).
+$ echo $?
+0
+
+## commands: request for -a 1010
+GET https://api.stackexchange.com/2.2/answers/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+
+## commands: 11227809 (sample content)
+$ stack-exchange-markdown-retriever 11227809
+Sample Stack Overflow question, made up for this wiki.
+$ echo $?
+0
+
+## commands: -k abc123 1 (sample content)
+$ stack-exchange-markdown-retriever -k abc123 1
+Sample question one.
+$ echo $?
+0
+
+## commands: request for -k
+GET https://api.stackexchange.com/2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&key=abc123&site=stackoverflow
+
+## commands: not found
+$ stack-exchange-markdown-retriever 404
+null
+$ echo $?
+0
+
+## commands: no body_markdown
+$ stack-exchange-markdown-retriever 9003
+null
+$ echo $?
+0
+
+## commands: API error
+$ stack-exchange-markdown-retriever 9001
+StackExchangeError: ids
+$ echo $?
+1
+
+## commands: throttled
+$ stack-exchange-markdown-retriever 9002
+StackExchangeError: too many requests from this IP, more requests available in 3600 seconds
+$ echo $?
+1
+
+## commands: HTML page
+$ stack-exchange-markdown-retriever 9007
+StackExchangeError: The response is not JSON
+$ echo $?
+1
+
+## commands: connection dropped
+$ stack-exchange-markdown-retriever 9020
+TypeError: fetch failed
+$ echo $?
+1
+
+## commands: --timeout 300 on a server that never answers
+$ stack-exchange-markdown-retriever --timeout 300 9011
+TimeoutError: The operation timed out.
+$ echo $?
+1
+
+## commands: --timeout abc
+$ stack-exchange-markdown-retriever --timeout abc 1
+error: --timeout takes a number of milliseconds, not "abc"
+$ echo $?
+1
+
+## commands: --timeout 0 (no timeout), found
+$ stack-exchange-markdown-retriever --timeout 0 1
+Sample question one.
+$ echo $?
+0
+
+## commands: no id
+$ stack-exchange-markdown-retriever
+Error: Need an entity id to read
+$ echo $?
+1
+
+## commands: letters as the id
+$ stack-exchange-markdown-retriever abc
+TypeError: entityId must be a post id (digits, or ids joined by ";"), not "abc"
+$ echo $?
+1
+
+## commands: -s without a value
+$ stack-exchange-markdown-retriever -s
+error: Option '-s, --site <value>' argument missing
+$ echo $?
+1
+
+## commands: -k without a value
+$ stack-exchange-markdown-retriever -k
+error: Option '-k, --apiKey <value>' argument missing
+$ echo $?
+1
+
+## commands: -s followed by the id only
+$ stack-exchange-markdown-retriever -s 1
+Error: Need an entity id to read
+$ echo $?
+1
+
+## commands: an unknown flag
+$ stack-exchange-markdown-retriever --foo 1
+error: Unknown option '--foo'. To specify a positional argument starting with a '-', place it at the end of the command after '--', as in '-- "--foo"
+$ echo $?
+1
+
+## commands: two ids (the second is ignored)
+$ stack-exchange-markdown-retriever 1 2
+Sample question one.
+$ echo $?
+0
+
+## commands: id 0
+$ stack-exchange-markdown-retriever 0
+null
+$ echo $?
+0
+
+## commands: ids joined by a semicolon
+$ stack-exchange-markdown-retriever '2;1'
+Sample question two.
+$ echo $?
+0
+
+## commands: through a shell
+shell node: v20.20.2
+null
+exit 0
+TypeError: entityId must be a post id (digits, or ids joined by ";"), not "abc"
+exit 1
+
+## recipes: a shell loop saving files (sample content)
+shell node: v20.20.2
+==> question-1.md <==
+Sample question one.
+
+==> question-2.md <==
+Sample question two.
+
+## recipes: save to a file (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+## recipes: decode HTML entities (sample content)
+Sample question body, made up for this wiki (not the real post).
+
+It keeps HTML entities: "quoted" & more.
+
+    an indented code line
+
+## recipes: several posts one after the other (sample content)
+1 Sample question one.
+2 Sample question two.
+404 null
+
+## recipes: handle throttling
+throttled: too many requests from this IP, more requests available in 3600 seconds
+
+## recipes: promisify-free callback to Promise
+Sample answer, made up for this wiki, with a [link](https://example.com/).
+
+## recipes: util.promisify gets the order wrong
+rejected with Sample question one.
+
+## recipes: proxy route this Node used
+undici EnvHttpProxyAgent preloaded
+
+## versions: 1.1.7 installed
+stack-exchange-markdown-retriever@1.1.7; request 2.88.2; commander 4.1.1
+
+## versions: 1.1.7 side by side (sample content)
+127968 -> "Sample question body, made up for this wiki (not the real post).\n\nIt keeps HTML entities: &quot;quoted&quot; &amp; more.\n\n    an indented code line" null
+1010 -> "Sample answer, made up for this wiki, with a [link](https://example.com/)." null
+404 -> null null
+9001 -> null Error: ids
+9004 -> null TypeError: Cannot read properties of undefined (reading 'toString')
+"abc" -> null null
+
+## versions: 1.1.7 side by side (sample content): requests
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi
+GET https://api.stackexchange.com/2.2/answers/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+GET https://api.stackexchange.com/2.2/questions/404?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+GET https://api.stackexchange.com/2.2/questions/9001?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+GET https://api.stackexchange.com/2.2/questions/9004?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+GET https://api.stackexchange.com/2.2/questions/abc?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+
+## versions: 2.0.0 side by side (sample content)
+127968 -> "Sample question body, made up for this wiki (not the real post).\n\nIt keeps HTML entities: &quot;quoted&quot; &amp; more.\n\n    an indented code line" null
+1010 -> "Sample answer, made up for this wiki, with a [link](https://example.com/)." null
+404 -> null null
+9001 -> null StackExchangeError: ids
+9004 -> "Sample plain JSON body." null
+"abc" -> threw TypeError: entityId must be a post id (digits, or ids joined by ";"), not "abc"
+
+## versions: 2.0.0 side by side (sample content): requests
+GET https://api.stackexchange.com/2.2/questions/127968?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=scifi
+GET https://api.stackexchange.com/2.2/answers/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+GET https://api.stackexchange.com/2.2/questions/404?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+GET https://api.stackexchange.com/2.2/questions/9001?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+GET https://api.stackexchange.com/2.2/questions/9004?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow
+
+## versions: 1.1.7 cli.js -a 1010
+exit 0
+--- stdout
+null
+--- stderr (first line)
+
+
+## versions: 2.0.0 cli -a 1010
+exit 0
+--- stdout
+Sample answer, made up for this wiki, with a [link](https://example.com/).
+--- stderr (first line)
+
+
+## versions: 1.1.7 cli.js 9001
+exit 0
+--- stdout
+null
+--- stderr (first line)
+
+
+## versions: 2.0.0 cli 9001
+exit 1
+--- stdout
+--- stderr (first line)
+StackExchangeError: ids
+
+## versions: 1.1.7 cli.js abc
+exit 0
+--- stdout
+null
+--- stderr (first line)
+
+
+## versions: 2.0.0 cli abc
+exit 1
+--- stdout
+--- stderr (first line)
+TypeError: entityId must be a post id (digits, or ids joined by ";"), not "abc"
+
+## versions: 1.1.7 cli.js --version
+exit 1
+--- stdout
+--- stderr (first line)
+error: unknown option '--version'
+
+## versions: 2.0.0 cli --version
+exit 0
+--- stdout
+2.0.0
+--- stderr (first line)
+
+
+## versions: 1.1.7 deprecation message
+1.x depends on the deprecated request package, its CLI was never installable and -a was ignored; use 2.x
+
+## versions: 1.1.7 bin field
+"<undefined>"
+
+## golden: changes to the copy run against 2.0.0
+1. the bin path read from package.json
+2. none for a dependency 2.0.0 dropped
+3. undici EnvHttpProxyAgent after the proxy variables, and preloaded in the CLI children
+4. a fixture copy serving CONNECT to other ports in plain HTTP: not needed (2.0.0 requests only https://api.stackexchange.com, CONNECT :443)
+
+## golden: 1.1.7 today
+header: package stack-exchange-markdown-retriever@1.1.7, dependencies {"commander":"4.1.1","request":"2.88.2"}, quirks identical: true
+guard hits in the output: none
+calls: 90; answers identical 90, timing identical 90, request lines identical 90
+CLI runs: 20; answers identical 20, request lines identical 20
+
+## golden: 2.0.0
+header: package stack-exchange-markdown-retriever@2.0.0, dependencies {"commander":"none","request":"none"}, quirks identical: false
+guard hits in the output: none
+quirk ownKeys: 1.1.7 ["retrieveMarkdown"], now ["__esModule","StackExchangeError","default","retrieveMarkdown","Symbol(Symbol.toStringTag)"]
+calls: 90; answers identical 56, timing identical 71, request lines identical 73
+CLI runs: 20; answers identical 10, request lines identical 16
+-- answers differ (34):
+  no arguments
+    1.1.7: {"threw":{"$throws":"Cannot read properties of undefined (reading 'entityId')","$error":"TypeError"},"calls":[]}
+    now:   {"returned":{},"calls":[],"uncaught":[{"$throws":"Cannot read properties of undefined (reading 'entityId')","$error":"TypeError"}]}
+  no callback
+    1.1.7: {"calls":[],"uncaught":[{"$throws":"callback is not a function","$error":"TypeError"}]}
+    now:   {"returned":{},"calls":[]}
+  callback null
+    1.1.7: {"calls":[],"uncaught":[{"$throws":"callback is not a function","$error":"TypeError"}]}
+    now:   {"returned":{},"calls":[]}
+  callback a string
+    1.1.7: {"calls":[],"uncaught":[{"$throws":"callback is not a function","$error":"TypeError"}]}
+    now:   {"threw":{"$throws":"callback must be a function, not \"not a function\"","$error":"TypeError"},"calls":[]}
+  callback that throws
+    1.1.7: {"calls":[["Question one.",null],[null,{"$error":"Error","message":"thrown by the callback"}]],"uncaught":[{"$throws":"thrown by the callback","$error":"Error"}]}
+    now:   {"calls":[["Question one.",null]],"uncaught":[{"$throws":"thrown by the callback","$error":"Error"}]}
+  callback that throws, on an API error
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"ids"}]],"uncaught":[{"$throws":"thrown by the callback","$error":"Error"}]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"ids"}]],"uncaught":[{"$throws":"thrown by the callback","$error":"Error"}]}
+  ids as an array
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not an array","$error":"TypeError"},"calls":[]}
+  entityId negative
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not -1","$error":"TypeError"},"calls":[]}
+  entityId a fraction
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not 1.5","$error":"TypeError"},"calls":[]}
+  entityId 1e21
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not 1e+21","$error":"TypeError"},"calls":[]}
+  entityId Infinity
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not Infinity","$error":"TypeError"},"calls":[]}
+  entityId true
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not true","$error":"TypeError"},"calls":[]}
+  entityId an object
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not an object","$error":"TypeError"},"calls":[]}
+  entityId letters
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"abc\"","$error":"TypeError"},"calls":[]}
+  entityId with a space
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"1 2\"","$error":"TypeError"},"calls":[]}
+  entityId with surrounding spaces
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \" 1 \"","$error":"TypeError"},"calls":[]}
+  entityId with dot segments
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"no method found with this name"}]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"../../users/1\"","$error":"TypeError"},"calls":[]}
+  entityId with a slash
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"no method found with this name"}]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"1/answers\"","$error":"TypeError"},"calls":[]}
+  entityId with a question mark
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"1?site=evil\"","$error":"TypeError"},"calls":[]}
+  entityId with a hash
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"1#frag\"","$error":"TypeError"},"calls":[]}
+  entityId with a percent sign
+    1.1.7: {"calls":[[null,null]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"1%2F2\"","$error":"TypeError"},"calls":[]}
+  entityId with a backslash
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"no method found with this name"}]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"1\\\\2\"","$error":"TypeError"},"calls":[]}
+  entityId an emoji (request refuses the path, no request)
+    1.1.7: {"calls":[[null,{"$error":"TypeError","message":"Request path contains unescaped characters","code":"ERR_UNESCAPED_CHARACTERS"}]]}
+    now:   {"threw":{"$throws":"entityId must be a post id (digits, or ids joined by \";\"), not \"😀\"","$error":"TypeError"},"calls":[]}
+  API error 400 (bad_parameter)
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"ids"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"ids"}]]}
+  API error 502 (throttle_violation)
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"too many requests from this IP, more requests available in 3600 seconds"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"too many requests from this IP, more requests available in 3600 seconds"}]]}
+  plain JSON body, no Content-Encoding
+    1.1.7: {"calls":[[null,{"$error":"TypeError","message":"Cannot read properties of undefined (reading 'toString')"}]]}
+    now:   {"calls":[["plain",null]]}
+  HTML error page, status 500
+    1.1.7: {"calls":[[null,{"$error":"TypeError","message":"Cannot read properties of undefined (reading 'toString')"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"The response is not JSON"}]]}
+  truncated gzip body
+    1.1.7: {"calls":[[null,{"$error":"TypeError","message":"Cannot read properties of undefined (reading 'toString')"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"The response is not JSON"}]]}
+  gzip of text that is not JSON
+    1.1.7: {"calls":[[null,{"$error":"SyntaxError","message":"Unexpected token 'h', \"this is not json\" is not valid JSON"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"The response is not JSON"}]]}
+  204 No Content
+    1.1.7: {"calls":[[null,{"$error":"TypeError","message":"Cannot read properties of undefined (reading 'toString')"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"The response is not JSON"}]]}
+  error_message beside items, status 200
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"odd"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"odd"}]]}
+  error_message on an answer route
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"ids"}]]}
+    now:   {"calls":[[null,{"$error":"StackExchangeError","message":"ids"}]]}
+  proxy refuses the tunnel (502 to CONNECT)
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"tunneling socket could not be established, statusCode=502","code":"ECONNRESET"}]]}
+    now:   {"calls":[[null,{"$error":"TypeError","message":"fetch failed"}]]}
+  connection dropped during the tunnel
+    1.1.7: {"calls":[[null,{"$error":"Error","message":"tunneling socket could not be established, cause=socket hang up","code":"ECONNRESET"}]]}
+    now:   {"calls":[]}
+-- timing differs (19):
+  callback that throws: 1.1.7 [false,false], now [false]
+  ids as an array: 1.1.7 [false], now []
+  entityId negative: 1.1.7 [false], now []
+  entityId a fraction: 1.1.7 [false], now []
+  entityId 1e21: 1.1.7 [false], now []
+  entityId Infinity: 1.1.7 [false], now []
+  entityId true: 1.1.7 [false], now []
+  entityId an object: 1.1.7 [false], now []
+  entityId letters: 1.1.7 [false], now []
+  entityId with a space: 1.1.7 [false], now []
+  entityId with surrounding spaces: 1.1.7 [false], now []
+  entityId with dot segments: 1.1.7 [false], now []
+  entityId with a slash: 1.1.7 [false], now []
+  entityId with a question mark: 1.1.7 [false], now []
+  entityId with a hash: 1.1.7 [false], now []
+  entityId with a percent sign: 1.1.7 [false], now []
+  entityId with a backslash: 1.1.7 [false], now []
+  entityId an emoji (request refuses the path, no request): 1.1.7 [false], now []
+  connection dropped during the tunnel: 1.1.7 [false], now []
+-- request lines differ (17):
+  callback a string
+    1.1.7: ["GET /2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  ids as an array
+    1.1.7: ["GET /2.2/questions/1,2?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId negative
+    1.1.7: ["GET /2.2/questions/-1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId a fraction
+    1.1.7: ["GET /2.2/questions/1.5?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId 1e21
+    1.1.7: ["GET /2.2/questions/1e+21?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId Infinity
+    1.1.7: ["GET /2.2/questions/Infinity?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId true
+    1.1.7: ["GET /2.2/questions/true?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId an object
+    1.1.7: ["GET /2.2/questions/[object%20Object]?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId letters
+    1.1.7: ["GET /2.2/questions/abc?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with a space
+    1.1.7: ["GET /2.2/questions/1%202?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with surrounding spaces
+    1.1.7: ["GET /2.2/questions/%201%20?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with dot segments
+    1.1.7: ["GET /2.2/questions/../../users/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with a slash
+    1.1.7: ["GET /2.2/questions/1/answers?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with a question mark
+    1.1.7: ["GET /2.2/questions/1%3Fsite=evil?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with a hash
+    1.1.7: ["GET /2.2/questions/1%23frag?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with a percent sign
+    1.1.7: ["GET /2.2/questions/1%2F2?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+  entityId with a backslash
+    1.1.7: ["GET /2.2/questions/1/2?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+-- CLI answers differ (10):
+  --help
+    1.1.7: {"status":0,"stdout":"Usage: cli [options] <entityId>\n\nOptions:\n  -a, --answer        Retrieve the markdown of an answer, rather than a\n                      question\n  -s, --site [site]   The base url for stack exc...
+    now:   {"status":0,"stdout":"\n  Print the markdown source of a question or an answer on a Stack Exchange site.\n\n  Usage\n    $ stack-exchange-markdown-retriever [-a] [-s <site>] [-k <key>] [--timeout <ms>] <id>\n\n  Options\...
+  -h
+    1.1.7: {"status":0,"stdout":"Usage: cli [options] <entityId>\n\nOptions:\n  -a, --answer        Retrieve the markdown of an answer, rather than a\n                      question\n  -s, --site [site]   The base url for stack exc...
+    now:   {"status":0,"stdout":"\n  Print the markdown source of a question or an answer on a Stack Exchange site.\n\n  Usage\n    $ stack-exchange-markdown-retriever [-a] [-s <site>] [-k <key>] [--timeout <ms>] <id>\n\n  Options\...
+  --version
+    1.1.7: {"status":1,"stdout":"","stderrError":"error: unknown option '--version'"}
+    now:   {"status":0,"stdout":"2.0.0\n","stderrError":""}
+  -a answer id (the flag is ignored: fetches a question)
+    1.1.7: {"status":0,"stdout":"null\n","stderrError":""}
+    now:   {"status":0,"stdout":"The answer is [42](https://example.com/42).\n\n> quoted\n","stderrError":""}
+  --answer answer id
+    1.1.7: {"status":0,"stdout":"null\n","stderrError":""}
+    now:   {"status":0,"stdout":"The answer is [42](https://example.com/42).\n\n> quoted\n","stderrError":""}
+  API error 400
+    1.1.7: {"status":0,"stdout":"null\n","stderrError":""}
+    now:   {"status":1,"stdout":"","stderrError":"StackExchangeError: ids"}
+  plain JSON body (zlib error)
+    1.1.7: {"status":0,"stdout":"null\n","stderrError":""}
+    now:   {"status":0,"stdout":"plain\n","stderrError":""}
+  letters as the id
+    1.1.7: {"status":0,"stdout":"null\n","stderrError":""}
+    now:   {"status":1,"stdout":"","stderrError":"TypeError: entityId must be a post id (digits, or ids joined by \";\"), not \"abc\""}
+  an unknown flag
+    1.1.7: {"status":1,"stdout":"","stderrError":"error: unknown option '--foo'"}
+    now:   {"status":1,"stdout":"","stderrError":"error: Unknown option '--foo'. To specify a positional argument starting with a '-', place it at the end of the command after '--', as in '-- \"--foo\""}
+  proxy refuses the tunnel
+    1.1.7: {"status":0,"stdout":"null\n","stderrError":""}
+    now:   {"status":1,"stdout":"","stderrError":"TypeError: fetch failed"}
+-- CLI request lines differ (4):
+  no arguments
+    1.1.7: []
+    now:   ["GET /2.2/questions/1?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+  -a answer id (the flag is ignored: fetches a question)
+    1.1.7: ["GET /2.2/questions/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   ["GET /2.2/answers/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+  --answer answer id
+    1.1.7: ["GET /2.2/questions/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   ["GET /2.2/answers/1010?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+  letters as the id
+    1.1.7: ["GET /2.2/questions/abc?order=asc&filter=!L_(I6pMIzdXP-hC1clc9EY&site=stackoverflow"]
+    now:   []
+
+## requests the fixture saw
+124 requests, all to api.stackexchange.com

@@ -5,8 +5,10 @@
 ## Current state
 2.0.0 is released (2026-09-26): npm latest 2.0.0, next 2.0.0-beta.1, provenance and signatures verified (verify-registry-npm.sh VERIFIED; release run 36264098125). master is protected by ruleset 24047775 (required check `ci`), tags by ruleset 24047776 (admins only). No open pull requests, 0 webhooks, 0 alerts.
 
+Wiki (2026-09-29): 10 pages written with wikiwright and committed in the sibling working copy `../stack-exchange-markdown-retriever.wiki`, not pushed; branch `wiki-2.0.0` holds the note `ai-docs/notes/2026-09-29-github-wiki.md` (how to update it, the verify script and outputs, 6 inaccuracies in README, CHANGELOG, CLI help and AGENTS.md for the next release).
+
 ## Mark's tasks
-None open. 1.x deprecated (read back 2026-09-26 on 1.0.0 and 1.1.7 with --prefer-online); merged branch v2 deleted 2026-09-26. The Snyk token from 1.1.4 and 1.1.5 was not revoked: Mark's Snyk login is too old to use and he chose not to pursue it (2026-09-26).
+Push the wiki (`git -C ../stack-exchange-markdown-retriever.wiki push`, then `wikiwright.py live`) and open the pull request for `wiki-2.0.0`. Otherwise none open. 1.x deprecated (read back 2026-09-26 on 1.0.0 and 1.1.7 with --prefer-online); merged branch v2 deleted 2026-09-26. The Snyk token from 1.1.4 and 1.1.5 was not revoked: Mark's Snyk login is too old to use and he chose not to pursue it (2026-09-26).
 
 ## Standing work
 - Dependabot pull requests weekly: merge when `ci` is green; read release notes for majors; TypeScript 7 is held in dependabot.yml until xo supports it.
