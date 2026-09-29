@@ -14,7 +14,7 @@ summary: "the wiki's 10 pages, where their git working copy is, how every exampl
 
 ## Summary
 
-Asked on 2026-09-29: write the GitHub wiki with the wikiwright skill (0.4.0), verifying every example and CLI invocation against the published 2.0.0 with local servers only. Written: 10 pages plus sidebar and footer, from the README, CHANGELOG, AGENTS.md, `src/`, the tests, the CI workflows, the npm registry and the golden capture of 1.1.7. Every output on a page came from [2026-09-29-wiki-verify.mjs](2026-09-29-wiki-verify.mjs), saved as [2026-09-29-wiki-verify.out.txt](2026-09-29-wiki-verify.out.txt) (Node 24.18.0) and [2026-09-29-wiki-verify.node20.out.txt](2026-09-29-wiki-verify.node20.out.txt) (Node 20.20.2). The wiki commit, 348a628, is local and not pushed (the maintainer pushes; see "How it was published").
+Asked on 2026-09-29: write the GitHub wiki with the wikiwright skill (0.4.0), verifying every example and CLI invocation against the published 2.0.0 with local servers only. Written: 10 pages plus sidebar and footer, from the README, CHANGELOG, AGENTS.md, `src/`, the tests, the CI workflows, the npm registry and the golden capture of 1.1.7. Every output on a page came from [2026-09-29-wiki-verify.mjs](2026-09-29-wiki-verify.mjs), saved as [2026-09-29-wiki-verify.out.txt](2026-09-29-wiki-verify.out.txt) (Node 24.18.0) and [2026-09-29-wiki-verify.node20.out.txt](2026-09-29-wiki-verify.node20.out.txt) (Node 20.20.2). Published on 2026-09-29 as wiki commit 348a628; `wikiwright.py live`: 10 pages, 0 failures, sidebar (13 of 13 probes) and footer render.
 
 Pages: Home, Getting-Started, API-Reference, How-Markdown-Is-Retrieved (the behaviour page), Commands, Edge-Cases-and-Errors, Recipes, Versions-and-Upgrading, FAQ, Development, `_Sidebar`, `_Footer`.
 
@@ -24,7 +24,7 @@ Pages: Home, Getting-Started, API-Reference, How-Markdown-Is-Retrieved (the beha
 
 ## How it was published
 
-Preflight (`wikiwright.py preflight m4bwav/stack-exchange-markdown-retriever --enable --clone ...`) reported `placeholder`: the wiki repository existed with GitHub's one-line `Home.md` (commit 62e9d1c, saved by the maintainer). The pages were committed on top of it in the working copy, which makes a plain fast-forward push. Not pushed in this run, by request: `git -C <wiki dir> push`, then `python <wikiwright>/scripts/wikiwright.py live m4bwav/stack-exchange-markdown-retriever <wiki dir>` (every page must answer 200, Home 301 to `/wiki`).
+Preflight (`wikiwright.py preflight m4bwav/stack-exchange-markdown-retriever --enable --clone ...`) reported `placeholder`: the wiki repository existed with GitHub's one-line `Home.md` (commit 62e9d1c, saved by the maintainer). The pages were committed on top of it in the working copy and pushed as a plain fast-forward (`62e9d1c..348a628`). `python <wikiwright>/scripts/wikiwright.py live m4bwav/stack-exchange-markdown-retriever <wiki dir>`: every page 200, Home 301 to `/wiki`, sidebar and footer rendered (10 pages, 0 failures).
 
 ## Updating the wiki later
 

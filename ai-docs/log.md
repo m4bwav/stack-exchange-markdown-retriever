@@ -51,3 +51,4 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-09-29] update | dead end: Deno 2.9.6 runs the --require preloads in NODE_OPTIONS, so the host fixture's env broke Deno on the Node 20 route (env permission error in undici's EnvHttpProxyAgent); fix: Deno and Bun children get the proxy variables with NODE_OPTIONS empty, each gated by an .invalid probe through the proxy
 ## [2026-09-29] update | finding: behind a proxy that hangs up on every CONNECT, Node's fetch (NODE_USE_ENV_PROXY=1 on Node 24 and undici EnvHttpProxyAgent on Node 20) retries at once until the call's timeout (about 18,000 CONNECTs in 5 s); in the golden replay the late retries can land in the next case's request window
 ## [2026-09-29] index | rebuilt (4 entries)
+## [2026-09-29] verify | wiki pushed (62e9d1c..348a628) and live-checked: 10 pages, 0 failures, sidebar and footer render; dist-tags now latest only (HANDOFF corrected)

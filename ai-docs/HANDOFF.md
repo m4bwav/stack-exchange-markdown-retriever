@@ -3,19 +3,20 @@
 <!-- Keep under 50 lines. Replace, never append. Written at the end of a work session so the next one starts without re-deriving state. -->
 
 ## Current state
-2.0.0 is released (2026-09-26): npm latest 2.0.0, next 2.0.0-beta.1, provenance and signatures verified (verify-registry-npm.sh VERIFIED; release run 36264098125). master is protected by ruleset 24047775 (required check `ci`), tags by ruleset 24047776 (admins only). No open pull requests, 0 webhooks, 0 alerts.
+2.0.0 is released (2026-09-26): npm latest 2.0.0 (the only dist-tag on 2026-09-29), provenance and signatures verified (verify-registry-npm.sh VERIFIED; release run 36264098125). master is protected by ruleset 24047775 (required check `ci`), tags by ruleset 24047776 (admins only). No open pull requests, 0 webhooks, 0 alerts.
 
-Wiki (2026-09-29): 10 pages written with wikiwright and committed in the sibling working copy `../stack-exchange-markdown-retriever.wiki`, not pushed; branch `wiki-2.0.0` holds the note `ai-docs/notes/2026-09-29-github-wiki.md` (how to update it, the verify script and outputs, 6 inaccuracies in README, CHANGELOG, CLI help and AGENTS.md for the next release).
+Wiki (2026-09-29): 10 pages written with wikiwright and published (wiki commit 348a628, live check clean; working copy `../stack-exchange-markdown-retriever.wiki`); the note `ai-docs/notes/2026-09-29-github-wiki.md` (how to update it, the verify script and outputs, 6 inaccuracies in README, CHANGELOG, CLI help and AGENTS.md for the next release).
 
 ## Mark's tasks
-Push the wiki (`git -C ../stack-exchange-markdown-retriever.wiki push`, then `wikiwright.py live`) and open the pull request for `wiki-2.0.0`. Otherwise none open. 1.x deprecated (read back 2026-09-26 on 1.0.0 and 1.1.7 with --prefer-online); merged branch v2 deleted 2026-09-26. The Snyk token from 1.1.4 and 1.1.5 was not revoked: Mark's Snyk login is too old to use and he chose not to pursue it (2026-09-26).
+None open. 1.x deprecated (read back 2026-09-26 on 1.0.0 and 1.1.7 with --prefer-online); merged branch v2 deleted 2026-09-26. The Snyk token from 1.1.4 and 1.1.5 was not revoked: Mark's Snyk login is too old to use and he chose not to pursue it (2026-09-26).
 
 ## Standing work
 - Dependabot pull requests weekly: merge when `ci` is green; read release notes for majors; TypeScript 7 is held in dependabot.yml until xo supports it.
 - live.yml runs weekly against the real API (two requests); a red run is a changed post or the quota, not a bug by itself.
 - Next major when Node 22 reaches end of life (2027-04-30): floor to 24.
 - If api.stackexchange.com retires /2.2/, add an apiVersion option in a minor (plan D16).
-- The `next` dist-tag stays on 2.0.0-beta.1 until the next prerelease.
+- There is no `next` dist-tag any more (only `latest`, read 2026-09-29); a future prerelease sets one.
+- The 6 doc inaccuracies in the wiki note wait for the next release (they ship inside the package).
 
 ## Next single action
 None in this repository; the next package is format-json-files (kickoff in package-modernization/prompts).
