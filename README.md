@@ -1,5 +1,7 @@
 # stack-exchange-markdown-retriever
 
+![A happy golden retriever dog carrying a rolled paper scroll in its mouth, trotting out of a tall stack of question cards in a cozy study](https://raw.githubusercontent.com/m4bwav/stack-exchange-markdown-retriever/master/.github/images/banner.jpg)
+
 [![npm version](https://img.shields.io/npm/v/stack-exchange-markdown-retriever.svg)](https://www.npmjs.com/package/stack-exchange-markdown-retriever)
 [![CI](https://github.com/m4bwav/stack-exchange-markdown-retriever/actions/workflows/ci.yml/badge.svg)](https://github.com/m4bwav/stack-exchange-markdown-retriever/actions/workflows/ci.yml)
 [![npm downloads](https://img.shields.io/npm/dm/stack-exchange-markdown-retriever.svg)](https://www.npmjs.com/package/stack-exchange-markdown-retriever)
