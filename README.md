@@ -110,6 +110,10 @@ The default export holds both: `import retriever from 'stack-exchange-markdown-r
 - Without an API key the API allows 300 requests a day per IP address; the package does not track the quota or back off.
 - In a browser it works only as far as the API's CORS headers allow, and any API key you pass is visible to your users.
 
+## Package page
+
+- npm: [stack-exchange-markdown-retriever](https://www.npmjs.com/package/stack-exchange-markdown-retriever)
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
